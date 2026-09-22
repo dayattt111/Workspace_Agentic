@@ -46,13 +46,14 @@
 ### 1. Prasyarat & Izin Eksekusi
 Pastikan skrip utama executable:
 ```bash
-chmod +x /home/hikaruu/gasken_workspace/*.sh
+chmod +x /home/hikaruu/gasken_workspace/bin/* /home/hikaruu/gasken_workspace/panes/*.sh
 ```
 
 ### 2. Registrasi Perintah Global
 Tambahkan alias ke `~/.bashrc`:
 ```bash
-echo 'alias gasken="/home/hikaruu/gasken_workspace/gasken.sh"' >> ~/.bashrc
+echo 'alias gasken="/home/hikaruu/gasken_workspace/bin/gasken.sh"' >> ~/.bashrc
+echo 'alias gaskenle="/home/hikaruu/gasken_workspace/bin/gasken.sh"' >> ~/.bashrc
 source ~/.bashrc
 ```
 

@@ -6,7 +6,7 @@ Halaman ini mengulas anatomi setiap berkas konfigurasi yang menyusun ekosistem G
 
 ## 1. Direktori Inti Workspace (`/home/hikaruu/gasken_workspace/`)
 
-### A. `gasken.sh` (Skrip Orkestrator Utama)
+### A. `bin/gasken.sh` (Skrip Orkestrator Utama)
 Skrip ini bertindak sebagai otak pembangun sesi. Alur eksekusinya adalah:
 1. **Deteksi Folder & Sesi:** Mengambil nama folder aktif dan membuat identifier sesi `gasken-[nama_folder]`. Jika sesi sudah ada, langsung melakukan `attach-session`.
 2. **Kalkulasi Dimensi Dinamis:**
@@ -24,7 +24,7 @@ Skrip ini bertindak sebagai otak pembangun sesi. Alur eksekusinya adalah:
    * Melakukan `split-window -v` pada sisi kanan dengan tinggi `BOTTOM_LINES` untuk Pane 2 (kanan bawah).
 4. **Injeksi Skrip & Pengalihan Fokus:** Mengirim perintah eksekusi ke masing-masing pane secara halus (`send-keys`), lalu mengarahkan kursor aktif ke Pane 2 (Git).
 
-### B. `tmux.conf` (Konfigurasi Multiplexer)
+### B. `config/tmux.conf` (Konfigurasi Multiplexer)
 * **Prefix Custom:** Mengubah prefix default `Ctrl + b` menjadi `Ctrl + a` yang lebih mudah dijangkau satu tangan:
   ```tmux
   unbind C-b
@@ -40,21 +40,21 @@ Skrip ini bertindak sebagai otak pembangun sesi. Alur eksekusinya adalah:
   bind -n F2 select-pane -t :.+
   ```
 
-### C. `pane-hermes.sh` (Panel Kiri - AI Agent)
+### C. `panes/pane-hermes.sh` (Panel Kiri - AI Agent)
 Menyiapkan lingkungan untuk interaksi AI. Mengecek ketersediaan binary `hermes`:
 ```bash
 if command -v hermes &> /dev/null; then
     hermes
 else
     echo "Ketik hermes di sini nanti"
-    bash --rcfile /home/hikaruu/gasken_workspace/workspace-bashrc -i
+    bash --rcfile /home/hikaruu/gasken_workspace/config/workspace-bashrc -i
 fi
 ```
 
-### D. `pane-yazi.sh` (Panel Kanan Atas - Yazi)
+### D. `panes/pane-yazi.sh` (Panel Kanan Atas - Yazi)
 Menjalankan binary file manager Yazi secara eksklusif menggunakan perintah `exec yazi` sehingga tidak meninggalkan shell wrapper tambahan di memori.
 
-### E. `pane-git.sh` & `workspace-bashrc` (Panel Kanan Bawah - Shell Eksekusi)
+### E. `panes/pane-git.sh` & `config/workspace-bashrc` (Panel Kanan Bawah - Shell Eksekusi)
 Memuat subshell khusus dengan prompt ringkas dan alias penutupan sesi instan:
 ```bash
 alias tutup="tmux kill-session"

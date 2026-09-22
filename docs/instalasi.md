@@ -45,21 +45,26 @@ yazi --version
 Pastikan seluruh berkas orkestrasi berada di folder workspace Anda:
 
 ```bash
-# Struktur direktori yang diharapkan
+# Struktur direktori modular yang diharapkan
 /home/hikaruu/gasken_workspace/
-├── gasken.sh             # Skrip utama pembangun sesi tmux
-├── tmux.conf             # Konfigurasi navigasi & mouse tmux
-├── pane-hermes.sh        # Skrip injeksi panel AI Agent
-├── pane-yazi.sh          # Skrip injeksi panel Yazi
-├── pane-git.sh           # Skrip injeksi panel Git Runner
-├── workspace-bashrc      # Konfigurasi subshell & alias
-└── docs/                 # Dokumentasi Docsify
+├── bin/
+│   ├── gasken.sh             # Skrip utama pembangun sesi tmux
+│   ├── gaskenle              # Symlink eksekutor CLI
+│   └── buka                  # Script opener mandiri
+├── config/
+│   ├── tmux.conf             # Konfigurasi navigasi & mouse tmux
+│   └── workspace-bashrc      # Konfigurasi subshell & alias
+├── panes/
+│   ├── pane-hermes.sh        # Skrip injeksi panel AI Agent
+│   ├── pane-yazi.sh          # Skrip injeksi panel Yazi
+│   └── pane-git.sh           # Skrip injeksi panel Git Runner
+└── docs/                     # Dokumentasi Docsify
 ```
 
-Beri izin eksekusi (*executable permission*) untuk seluruh skrip `.sh`:
+Beri izin eksekusi (*executable permission*) untuk seluruh skrip di `bin/` dan `panes/`:
 
 ```bash
-chmod +x /home/hikaruu/gasken_workspace/*.sh
+chmod +x /home/hikaruu/gasken_workspace/bin/* /home/hikaruu/gasken_workspace/panes/*.sh
 ```
 
 ---
@@ -120,8 +125,9 @@ set constantshow
 Tambahkan alias ke konfigurasi shell utama Anda (`~/.bashrc`):
 
 ```bash
-echo 'alias gasken="/home/hikaruu/gasken_workspace/gasken.sh"' >> ~/.bashrc
+echo 'alias gasken="/home/hikaruu/gasken_workspace/bin/gasken.sh"' >> ~/.bashrc
+echo 'alias gaskenle="/home/hikaruu/gasken_workspace/bin/gasken.sh"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Sekarang perintah `gasken` siap digunakan di folder mana saja!
+Sekarang perintah `gasken` dan `gaskenle` siap digunakan di folder mana saja!

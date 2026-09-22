@@ -5,5 +5,5 @@ if command -v hermes &> /dev/null; then
     hermes
 else
     echo "Ketik hermes di sini nanti"
-    bash --rcfile /home/hikaruu/gasken_workspace/workspace-bashrc -i
+    bash --rcfile /home/hikaruu/gasken_workspace/config/workspace-bashrc -i
 fi
