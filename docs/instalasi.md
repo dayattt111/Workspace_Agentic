@@ -1,6 +1,6 @@
 # 📦 Instalasi & Prasyarat
 
-Halaman ini memandu instalasi dependensi sistem dan penyiapan berkas konfigurasi agar Gasken Workspace dapat beroperasi sempurna.
+Halaman ini memandu instalasi dependensi sistem dan penyiapan berkas konfigurasi agar Gaskenle dapat beroperasi sempurna.
 
 ---
 

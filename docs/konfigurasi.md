@@ -1,6 +1,6 @@
 # ⚙️ Arsitektur & Detail Konfigurasi
 
-Halaman ini mengulas anatomi setiap berkas konfigurasi yang menyusun ekosistem Gasken Workspace.
+Halaman ini mengulas anatomi setiap berkas konfigurasi yang menyusun ekosistem Gaskenle.
 
 ---
 

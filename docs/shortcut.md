@@ -1,6 +1,6 @@
 # ⌨️ Daftar Pintasan (Shortcuts)
 
-Referensi lengkap pintasan keyboard (*keybindings*) untuk navigasi cepat di Gasken Workspace tanpa mengangkat tangan dari keyboard.
+Referensi lengkap pintasan keyboard (*keybindings*) untuk navigasi cepat di Gaskenle tanpa mengangkat tangan dari keyboard.
 
 ---
 

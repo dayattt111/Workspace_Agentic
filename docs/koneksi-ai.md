@@ -1,6 +1,6 @@
 # 🤖 Koneksi AI Agent & Protokol Keamanan
 
-Gasken Workspace dirancang dari awal untuk mengakomodasi kolaborasi manusia dan AI Agent (*pair programming*) dengan pemisahan peran yang tegas dan aman.
+Gaskenle dirancang dari awal untuk mengakomodasi kolaborasi manusia dan AI Agent (*pair programming*) dengan pemisahan peran yang tegas dan aman.
 
 ---
 
@@ -13,13 +13,13 @@ Panel 0 (kiri) difungsikan sebagai wadah interaksi agen AI berbasis CLI, seperti
 ### Kolaborasi Dua Arah (Dual-Layer Workflow)
 Dalam setup modern, Anda dapat menggabungkan:
 1. **Antigravity IDE:** Digunakan sebagai arsitek kode utama, penganalisis berkas mendalam, dan perancang sistem.
-2. **Gasken Terminal Workspace:** Digunakan untuk eksekusi, runtime checks, monitoring file via Yazi, dan interaksi CLI cepat.
+2. **Gaskenle Terminal:** Digunakan untuk eksekusi, runtime checks, monitoring file via Yazi, dan interaksi CLI cepat.
 
 ---
 
 ## 2. Sinkronisasi Antar-Proses (Zero-Polling via `inotify`)
 
-Salah satu keunggulan arsitektur Gasken Workspace adalah integrasi event kernel Linux:
+Salah satu keunggulan arsitektur Gaskenle adalah integrasi event kernel Linux:
 * Ketika AI Agent (atau Antigravity) menulis, mengedit, atau menghapus file di filesystem proyek, kernel Linux akan langsung menembakkan sinyal `inotify`.
 * File manager **Yazi** di Panel Kanan Atas mendengarkan sinyal ini secara native dan memperbarui daftar berkas secara instan tanpa perlu refresh manual.
 * Developer dapat langsung meninjau perubahannya di Panel Kanan Bawah menggunakan `git diff` atau `git status`.
@@ -28,7 +28,7 @@ Salah satu keunggulan arsitektur Gasken Workspace adalah integrasi event kernel 
 
 ## 3. Protokol Keamanan & Aturan Operasional Agen
 
-Untuk menjaga kestabilan sistem operasi dan mencegah kerusakan pada konfigurasi OS penting, setiap AI Agent (termasuk Antigravity) yang beroperasi pada sistem ini terikat oleh **Gasken Workspace Protocol**:
+Untuk menjaga kestabilan sistem operasi dan mencegah kerusakan pada konfigurasi OS penting, setiap AI Agent (termasuk Antigravity) yang beroperasi pada sistem ini terikat oleh **Gaskenle Protocol**:
 
 ### 🛡️ ATURAN 1: Larangan Modifikasi Tanpa Persetujuan (*Explicit Consent*)
 1. Agen dilarang keras membuat skrip otomatis untuk menimpa (*overwrite*), menghapus (*rm*), atau mengubah file di lokasi:

@@ -1,12 +1,16 @@
-# ⚡ Gasken Workspace
+<div align="center">
+  <img src="assets/images/logo.png" alt="GaskenLE Logo" width="140" style="border-radius: 16px; margin-bottom: 8px;" />
+  <h1 style="border-bottom: none; margin: 0; font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em;">GaskenLE</h1>
+  <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 2px 0 16px 0; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;">— workspace —</p>
+</div>
 
-> Lingkungan kerja terminal otomatis berbasis **Ubuntu + GNOME + tmux** dengan efisiensi memori ekstrem dan akses berkas berkecepatan 0 ms.
+> Workspace terminal super ringan berbasis **Ubuntu + tmux + Yazi + Nano** dengan efisiensi memori ekstrem dan akses berkas berkecepatan 0 ms.
 
 ---
 
 ## 🎯 Filosofi & Tujuan Proyek
 
-**Gasken Workspace** dirancang untuk developer yang menginginkan alur kerja modern dan terintegrasi tanpa terbebani oleh konsumsi resource IDE berbasis Electron/GUI yang rakus RAM. 
+**Gaskenle** dirancang untuk developer yang menginginkan alur kerja modern dan terintegrasi tanpa terbebani oleh konsumsi resource IDE berbasis Electron/GUI yang rakus RAM. 
 
 ### 1. Hemat Memori Ekstrem
 Memangkas beban penggunaan RAM dari standar IDE berat (sekitar 1–2 GB) menjadi baseline hanya **sekitar 35–50 MB**. Hal ini memberikan ruang komputasi maksimal untuk compiler, Docker container, test runner, atau model AI lokal.
@@ -21,9 +25,9 @@ Membuka file kode secara instan dan membuka pratinjau gambar secara native tanpa
 
 ## 📊 Benchmark Performa
 
-Perbandingan konsumsi sumber daya saat idle antara IDE modern standar dan Gasken Workspace:
+Perbandingan konsumsi sumber daya saat idle antara IDE modern standar dan Gaskenle:
 
-| Metrik | IDE Berbasis GUI/Electron (VS Code/Cursor) | Gasken Terminal Workspace | Efisiensi |
+| Metrik | IDE Berbasis GUI/Electron (VS Code/Cursor) | Gaskenle Terminal | Efisiensi |
 | :--- | :--- | :--- | :--- |
 | **RAM Baseline (Idle)** | 850 MB – 2.1 GB | **35 – 50 MB** | **Hemat ~96%** |
 | **Waktu Booting (Cold Start)** | 3.5 – 8.0 detik | **< 0.5 detik** | **Instan** |

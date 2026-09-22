@@ -1,7 +1,7 @@
 {
-  "name": "gasken-docs",
+  "name": "gaskenle-docs",
   "version": "1.0.0",
-  "description": "Dokumentasi resmi Gasken Workspace",
+  "description": "Dokumentasi resmi Gaskenle",
   "scripts": {
     "dev": "bun run server.ts",
     "start": "bun run server.ts",

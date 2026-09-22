@@ -1,6 +1,6 @@
 # 🚀 Penggunaan Harian
 
-Panduan alur kerja harian menggunakan Gasken Workspace untuk meningkatkan produktivitas tanpa distraksi dan tanpa beban memori.
+Panduan alur kerja harian menggunakan Gaskenle untuk meningkatkan produktivitas tanpa distraksi dan tanpa beban memori.
 
 ---
 

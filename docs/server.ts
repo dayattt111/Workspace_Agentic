@@ -25,5 +25,5 @@ const server = Bun.serve({
   },
 });
 
-console.log(`\n⚡ Gasken Docsify aktif di: http://localhost:${server.port}`);
+console.log(`\n⚡ Gaskenle Docs aktif di: http://localhost:${server.port}`);
 console.log(`Tekan Ctrl + C untuk mematikan server.\n`);

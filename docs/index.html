@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Gasken Workspace - Ultra-Lightweight Terminal Workspace</title>
+  <title>GaskenLE - Ultra-Lightweight Terminal Workspace</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Dokumentasi resmi Gasken Workspace: Lingkungan kerja terminal otomatis berbasis Ubuntu, tmux, Yazi, dan Nano dengan konsumsi RAM ultra-rendah.">
+  <meta name="description" content="Dokumentasi resmi GaskenLE: Workspace terminal super ringan berbasis Ubuntu + tmux + Yazi + Nano.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
   <!-- Docsify Base Theme -->
@@ -12,12 +12,91 @@
 
   <!-- Modular Design System (Clean Code & Configurable) -->
   <link rel="stylesheet" href="assets/style.css">
+
+  <!-- Custom Page Layout, Spacing & Watermark Styling -->
+  <style>
+    /* Spacing & Margin Konten Utama */
+    .content {
+      padding: 2.5rem 3.5rem 5rem 3.5rem !important;
+      position: relative;
+    }
+
+    .markdown-section {
+      max-width: 920px !important;
+      padding: 0.5rem 1rem !important;
+      margin: 0 auto !important;
+    }
+
+    /* Sidebar Spacing & Visual Boundary */
+    .sidebar {
+      padding: 1.5rem 1.1rem 2rem 1.1rem !important;
+    }
+
+    .app-name {
+      text-align: center !important;
+      margin: 0.5rem 0 1.25rem 0 !important;
+    }
+
+    .app-name-link {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      text-decoration: none !important;
+    }
+
+    .app-name-link img {
+      max-width: 85px !important;
+      height: auto !important;
+      margin: 0 auto 0.6rem auto !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+      transition: transform 0.2s ease;
+    }
+
+    .app-name-link:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Watermark / Footer Atribusi */
+    .docs-footer {
+      margin-top: 4rem;
+      padding: 1.75rem 0 1rem 0;
+      border-top: 1px solid var(--border-color, #30363d);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-secondary, #8b949e);
+      letter-spacing: 0.01em;
+    }
+
+    .docs-footer a {
+      color: var(--accent-color, #10b981) !important;
+      text-decoration: none !important;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .docs-footer a:hover {
+      color: var(--accent-hover, #34d399) !important;
+      text-decoration: underline !important;
+    }
+
+    /* Responsif Mobile */
+    @media screen and (max-width: 768px) {
+      .content {
+        padding: 1.25rem 1rem 3rem 1rem !important;
+      }
+      .markdown-section {
+        padding: 0 0.5rem !important;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="app">Memuat dokumentasi Gasken Workspace...</div>
+  <div id="app">Memuat dokumentasi GaskenLE...</div>
   <script>
     window.$docsify = {
-      name: '⚡ Gasken Workspace',
+      name: 'GaskenLE',
+      logo: 'assets/images/logo.png',
       repo: '',
       loadSidebar: true,
       subMaxLevel: 3,
@@ -33,7 +112,20 @@
         buttonText: 'Salin',
         errorText: 'Gagal',
         successText: 'Tersalin'
-      }
+      },
+      plugins: [
+        function(hook) {
+          var footer = [
+            '<div class="docs-footer">',
+            'Made by <a href="https://github.com/dayattt111" target="_blank" rel="noopener noreferrer">Hikaruu (github.com/dayattt111)</a>',
+            '</div>'
+          ].join('');
+
+          hook.afterEach(function(html) {
+            return html + footer;
+          });
+        }
+      ]
     }
   </script>
   <!-- Docsify Core -->
