@@ -24,39 +24,34 @@ const server = Bun.serve({
     return new Response("Not Found", { status: 404 });
   },
 });
-console.log(`                                                              
-                                                              
-                                                              
-                      @@@@@@@@@@@                             
-                     @: ::::::  .@                            
-                     *. @@@@@@@  @%                       @@@ 
-           @#:*@%@%-   %@@@@@@@*.   =%@                @@*#@  
-         @#.       .#@@@@@@#*+*#%@@%:  -*@          @@*.  #@  
-        %= .@@@@@@@@@@%+. :++:        -  :#%     @@#-    .@   
-       @  @@@@@@@@@%: =#                   +@  @@=      .%    
-       %* +@@@@@@# -*          #@@@@@@@@@@@@@@-        %@     
-        %* *@@@@::=        -%@%*+=:  :=*%@@:        :#@@@@    
-        * :@@@%.=        *@#-         *%.        -%@*  #@     
-       % .@@@%:=       =@*         +#:       :#=      -%      
-   @=.:  @@@@==       +@:       -*=       -:         +@       
-   * %@@@@@@%=       =@       +*      :           +@@         
-   * @@@@@@@#.       @#     #:    :        =%@**%@@@@         
-   * @@@@@@@#       :@     #   -                 :%@          
-   * @@@@@@@#       +@        -              :=+#%            
-   @..  *@@@+       :@#   -   -  +=        :#@%               
-      #= @@@:        @@.  #  :  =  .:::::=%%+                 
-       % =@@=+        @@***=   *=-     *=                     
-       %+ @@# +        %@#:  ##:    .#:     :+                
-      %% -@@@# *        :@@@@**##%*       =@@@                
-     @+ %@@@@@%..=         =@@@@@@%%@@@@@%-*@                 
-      @+ .@@@@@@+ :-                      +%                  
-        #. =+   =@*:::                  +#                    
-         %*  *%*   -*%+=++:         =#%-                      
-                .*#. %@@@@@@%++-.                             
-                  :*. %%%%%= .%#-                             
-                   *#+++++++*#                                                                                       
-                                                              
-                   `);
-console.log(`\n Made By Hikaruu(Muhammad Amin Hidayat) \n`);
-console.log(`\n⚡ Gaskenle Docs aktif di: http://localhost:${server.port}`);
-console.log(`Tekan Ctrl + C untuk mematikan server.\n`);
+
+// Kode Warna ANSI Terminal (Emas, Tulang, & Hijau)
+const GOLD = "\x1b[38;5;220m";
+const BONE = "\x1b[38;5;254m";
+const GRAY = "\x1b[38;5;244m";
+const GREEN = "\x1b[38;5;114m";
+const RESET = "\x1b[0m";
+
+console.log(`
+${GOLD}           .@@@@@@.
+         @%  @@@@  %@        @@
+      @*   #@@@*=+%@:  -@   @*#@
+     @ .@@@@@+ :++    .  #@#- .@
+    %* +@@@# -*    *@@@@@@-  %@
+     * :@@.=     *@:   *%  -%* #@
+ @:  @@@==     +@:  -*   -   +@
+ * @@@@%=     =@   *        +@@
+ * @@@@#     :@   #       :=+#%
+  # @@@:      @@. #  .-+%%+
+   % @@*.      %@# *#   .*:  :+
+  @ +@@@@=       =@@@%@@@%-*@
+    %  *@*::           +#
+      *#  *@@@@%+=.
+            **++**${RESET}
+
+    ${BONE}\x1b[1mG a s k e n L E${RESET} ${GRAY}— workspace —${RESET}
+    ${GRAY}Made by Hikaruu (Muhammad Amin Hidayat)${RESET}
+
+  ${GREEN}⚡ GaskenLE Docs aktif di:${RESET} ${BONE}http://localhost:${server.port}${RESET}
+  ${GRAY}Tekan Ctrl + C untuk mematikan server.${RESET}
+`);
