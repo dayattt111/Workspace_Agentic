@@ -2,16 +2,15 @@
 
 # ==============================================================================
 # GaskenLE - Smart AI Agent & Router Launcher (Pane 0)
-# Skema: 9router (Gateway LLM) <---> Hermes Agent (Docker) <---> GaskenLE
-# Konfigurasi dinamis & privat dimuat dari .env dan config/agent.conf
+# Skema: 9router (Gateway LLM Host) <───> Hermes Agent (Docker) <───> GaskenLE
+# Pengguna langsung masuk ke Prompt Interaktif Hermes Agent
 # ==============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# 1. Muat .env jika ada (Privat & Prioritas Tertinggi)
+# 1. Muat .env secara privat & aman (Zero-Touch Policy)
 if [ -f "$WORKSPACE_DIR/.env" ]; then
-  # Gunakan set -a untuk mengekspor variable tanpa mencetak isinya
   set -a
   # shellcheck source=/dev/null
   source "$WORKSPACE_DIR/.env" 2>/dev/null || true
@@ -24,7 +23,7 @@ if [ -f "$WORKSPACE_DIR/config/agent.conf" ]; then
   source "$WORKSPACE_DIR/config/agent.conf"
 fi
 
-# Fallback internal jika belum terdefinisi sama sekali
+# Variabel Lingkungan & Port
 HERMES_DIR="${HERMES_DIR:-$WORKSPACE_DIR/hermes}"
 HERMES_CONTAINER="${HERMES_CONTAINER_NAME:-gasken-hermes}"
 HERMES_PORT="${HERMES_PORT:-6666}"
@@ -33,7 +32,6 @@ HERMES_MODEL="${HERMES_MODEL:-hermes-3-llama-3.1-8b}"
 NINEROUTER_DIR="${CUSTOM_NINEROUTER_DIR:-$WORKSPACE_DIR/9router}"
 NINEROUTER_PORT="${NINEROUTER_PORT:-20128}"
 NINEROUTER_HOST="${NINEROUTER_HOST:-0.0.0.0}"
-NINEROUTER_GATEWAY_URL="${NINEROUTER_GATEWAY_URL:-http://host.docker.internal:20128/v1}"
 
 DEFAULT_AGENT="${AGENT_MODE:-menu}"
 
@@ -50,15 +48,9 @@ CYAN="\033[36m"
 RED="\033[38;5;203m"
 RESET="\033[0m"
 
-clear
-echo -e "${GOLD}===============================================${RESET}"
-echo -e "${BONE}       ⚡ GASKENLE AI AGENT ECOSYSTEM ⚡       ${RESET}"
-echo -e "${GRAY}      9router Gateway  <───>  Hermes Docker    ${RESET}"
-echo -e "${GOLD}===============================================${RESET}"
-
 is_9router_running() {
   if command -v ss &>/dev/null; then
-    ss -tuln | grep -q ":${NINEROUTER_PORT} " && return 0
+    ss -tulpn | grep -q ":${NINEROUTER_PORT} " && return 0
   fi
   if command -v curl &>/dev/null; then
     local code
@@ -74,38 +66,51 @@ ensure_9router_daemon() {
     return 0
   fi
 
-  echo -e "${YELLOW}[9router]${RESET} Menjalankan 9router Gateway di background..."
+  echo -e "${YELLOW}[9router]${RESET} Menyalakan 9router Gateway di background..."
   mkdir -p "$WORKSPACE_DIR/logs"
 
   if command -v 9router &>/dev/null; then
     (
       cd "$NINEROUTER_DIR" 2>/dev/null || cd "$WORKSPACE_DIR"
-      nohup 9router -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n --skip-update > "$WORKSPACE_DIR/logs/9router.log" 2>&1 &
+      nohup 9router -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n --skip-update < /dev/null > "$WORKSPACE_DIR/logs/9router.log" 2>&1 &
     )
-    sleep 1.5
-    if is_9router_running; then
-      echo -e "${GREEN}✓ 9router Gateway berhasil dinyalakan (Port :${NINEROUTER_PORT})${RESET}"
-      return 0
-    else
-      echo -e "${YELLOW}ℹ 9router sedang memulai, log: logs/9router.log${RESET}"
-      return 0
-    fi
+    # Tunggu beberapa detik sampai server siap
+    for _ in {1..10}; do
+      sleep 0.5
+      if is_9router_running; then
+        echo -e "${GREEN}✓ 9router Gateway berhasil aktif di port :${NINEROUTER_PORT}${RESET}"
+        return 0
+      fi
+    done
+    echo -e "${YELLOW}ℹ 9router sedang proses booting, log: logs/9router.log${RESET}"
+    return 0
   else
-    echo -e "${RED}CLI '9router' belum terpasang.${RESET}"
+    echo -e "${RED}CLI '9router' belum terpasang di sistem host.${RESET}"
     echo -e "${GRAY}Pasang via: bun add -g 9router ATAU npm install -g 9router${RESET}"
     return 1
   fi
 }
 
+configure_hermes_endpoint() {
+  local container="$1"
+  # Set base_url dan provider hermes agar langsung tersambung ke 9router (127.0.0.1:20128)
+  docker exec "$container" /opt/hermes/bin/hermes config set model.provider main &>/dev/null || true
+  docker exec "$container" /opt/hermes/bin/hermes config set model.base_url "http://127.0.0.1:${NINEROUTER_PORT}/v1" &>/dev/null || true
+}
+
 start_unified() {
-  echo -e "\n${BONE}▶ Memulai Mode Unified (9router + Hermes Agent)...${RESET}"
-  
-  # 1. Pastikan 9router aktif
+  clear
+  echo -e "${GOLD}===============================================${RESET}"
+  echo -e "${BONE}       ⚡ GASKENLE AI AGENT ECOSYSTEM ⚡       ${RESET}"
+  echo -e "${GRAY}      9router Gateway  <───>  Hermes Docker    ${RESET}"
+  echo -e "${GOLD}===============================================${RESET}"
+
+  # 1. Pastikan 9router Gateway menyala
   ensure_9router_daemon
 
-  # 2. Pastikan Docker aktif dan jalankan Hermes
+  # 2. Cek Docker
   if ! command -v docker &>/dev/null; then
-    echo -e "${RED}Error: Docker tidak ditemukan di sistem host.${RESET}"
+    echo -e "${RED}Error: Docker CLI tidak ditemukan di sistem host.${RESET}"
     start_shell
     return
   fi
@@ -128,96 +133,116 @@ start_unified() {
   fi
 
   if [ -n "$RUNNING_CONTAINER" ]; then
-    echo -e "${GREEN}✓ Container Hermes aktif:${RESET} $RUNNING_CONTAINER"
-    echo -e "${GRAY}Endpoint 9router :${RESET} ${CYAN}${NINEROUTER_GATEWAY_URL}${RESET}"
-    echo -e "${GRAY}Hermes Port      :${RESET} ${GOLD}http://127.0.0.1:${HERMES_PORT}${RESET}"
-    echo -e "${BONE}Menghubungkan ke sesi shell Hermes Agent...${RESET}\n"
-    docker exec -it "$RUNNING_CONTAINER" bash || docker exec -it "$RUNNING_CONTAINER" sh
+    echo -e "${GREEN}✓ Hermes Container Aktif:${RESET} $RUNNING_CONTAINER"
+    echo -e "${GRAY}Router Endpoint :${RESET} ${CYAN}http://127.0.0.1:${NINEROUTER_PORT}/v1${RESET}"
+    echo -e "${GRAY}Workspace Mount :${RESET} ${GOLD}/workspace${RESET} -> Root Proyek GaskenLE"
+
+    # Sinkronisasi endpoint koneksi Hermes ke 9router
+    configure_hermes_endpoint "$RUNNING_CONTAINER"
+
+    echo -e "\n${BONE}▶ Membuka Interactive Hermes Agent... (Siap Prompt!)${RESET}"
+    echo -e "${GRAY}Tips: Ketik /exit atau Ctrl+C untuk keluar ke menu manajemen.${RESET}\n"
+    
+    # LANGSUNG BUKA PROMPT HERMES AGENT
+    docker exec -it -w /workspace "$RUNNING_CONTAINER" /opt/hermes/bin/hermes
   else
-    echo -e "${RED}Gagal mendeteksi container Hermes yang aktif.${RESET}"
-    echo -e "${GRAY}Cek log: docker compose logs di folder $HERMES_DIR${RESET}"
+    echo -e "${RED}Gagal menjalankan container Hermes.${RESET}"
+    echo -e "${GRAY}Periksa dengan: docker compose logs di folder $HERMES_DIR${RESET}"
   fi
 
-  start_shell
+  hermes_post_session_menu "$RUNNING_CONTAINER"
+}
+
+hermes_post_session_menu() {
+  local container="$1"
+  while true; do
+    echo -e "\n${GOLD}===============================================${RESET}"
+    echo -e "${BONE}          ⚙️  MANAJEMEN AI AGENT & ROUTER       ${RESET}"
+    echo -e "${GOLD}===============================================${RESET}"
+    echo -e "  ${GOLD}1)${RESET} ${BONE}Masuk Kembali ke Prompt Hermes${RESET} ${GREEN}(Chat Agent)${RESET}"
+    echo -e "  ${GOLD}2)${RESET} ${BONE}Mode TUI Modern Hermes${RESET} ${GRAY}(hermes --tui)${RESET}"
+    echo -e "  ${GOLD}3)${RESET} ${BONE}Pilih / Ganti Model Hermes${RESET} ${GRAY}(hermes model)${RESET}"
+    echo -e "  ${GOLD}4)${RESET} ${BONE}Setup Wizard Hermes${RESET} ${GRAY}(hermes setup)${RESET}"
+    echo -e "  ${GOLD}5)${RESET} ${CYAN}Kelola 9router Gateway${RESET} ${GRAY}(Buka Web UI / Log)${RESET}"
+    echo -e "  ${GOLD}6)${RESET} ${YELLOW}Terminal Shell Container${RESET} ${GRAY}(docker exec bash)${RESET}"
+    echo -e "  ${GOLD}7)${RESET} ${BONE}Terminal Shell Biasa${RESET} ${GRAY}(Bash Workspace)${RESET}"
+    echo ""
+    read -r -p "Pilihan [1-7] (Default 1): " sub_opt
+    case "$sub_opt" in
+      2)
+        docker exec -it -w /workspace "$container" /opt/hermes/bin/hermes --tui
+        ;;
+      3)
+        docker exec -it -w /workspace "$container" /opt/hermes/bin/hermes model
+        ;;
+      4)
+        docker exec -it -w /workspace "$container" /opt/hermes/bin/hermes setup
+        ;;
+      5)
+        manage_9router_menu
+        ;;
+      6)
+        docker exec -it -w /workspace "$container" bash || docker exec -it "$container" sh
+        ;;
+      7)
+        start_shell
+        return
+        ;;
+      *)
+        docker exec -it -w /workspace "$container" /opt/hermes/bin/hermes
+        ;;
+    esac
+  done
+}
+
+manage_9router_menu() {
+  echo -e "\n${CYAN}--- PENGATURAN 9ROUTER GATEWAY ---${RESET}"
+  echo -e "Status: $(is_9router_running && echo -e "${GREEN}AKTIF (:20128)${RESET}" || echo -e "${RED}MATI${RESET}")"
+  echo -e "  ${GOLD}1)${RESET} Buka Dashboard Web UI di Browser ${GRAY}(http://localhost:20128)${RESET}"
+  echo -e "  ${GOLD}2)${RESET} Pantau Streaming Log 9router ${GRAY}(tail -f logs/9router.log)${RESET}"
+  echo -e "  ${GOLD}3)${RESET} Restart 9router Gateway"
+  echo -e "  ${GOLD}4)${RESET} Kembali"
+  read -r -p "Pilihan [1-4] (Default 1): " nr_act
+  case "$nr_act" in
+    1)
+      if command -v xdg-open &>/dev/null; then
+        xdg-open "http://localhost:${NINEROUTER_PORT}" &>/dev/null &
+      fi
+      echo -e "${GREEN}Dashboard:${RESET} http://localhost:${NINEROUTER_PORT}"
+      ;;
+    2)
+      echo -e "${GRAY}Menampilkan log 9router (Ctrl+C untuk selesai)...${RESET}"
+      tail -f -n 50 "$WORKSPACE_DIR/logs/9router.log"
+      ;;
+    3)
+      echo -e "${YELLOW}Merestart 9router...${RESET}"
+      pkill -f "9router" 2>/dev/null || true
+      sleep 1
+      ensure_9router_daemon
+      ;;
+    *)
+      ;;
+  esac
 }
 
 start_9router_standalone() {
-  echo -e "\n${CYAN}[9router Gateway]${RESET} Menjalankan server gateway realtime..."
+  clear
+  echo -e "${CYAN}===============================================${RESET}"
+  echo -e "${BONE}       🌐 9ROUTER GATEWAY CONSOLE LOG          ${RESET}"
+  echo -e "${CYAN}===============================================${RESET}"
   
   if [ ! -d "$NINEROUTER_DIR" ]; then
     mkdir -p "$NINEROUTER_DIR"
   fi
 
   cd "$NINEROUTER_DIR" || exit 1
-  echo -e "${GREEN}Direktori aktif:${RESET} $PWD"
 
   if command -v 9router &>/dev/null; then
-    echo -e "${GRAY}Menjalankan '9router -p $NINEROUTER_PORT -l'... (Tekan Ctrl+C untuk keluar)${RESET}\n"
+    echo -e "${GRAY}Menjalankan server 9router di foreground (Ctrl+C untuk keluar)...${RESET}\n"
     9router -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -l
   else
-    echo -e "${RED}CLI '9router' belum terdeteksi di sistem.${RESET}"
-    echo -e "${BONE}Apakah ingin menginstalnya sekarang?${RESET}"
-    echo -e "  ${GOLD}1)${RESET} Install via Bun: bun add -g 9router"
-    echo -e "  ${GOLD}2)${RESET} Install via NPM: npm install -g 9router"
-    echo -e "  ${GOLD}3)${RESET} Lewati & buka terminal shell"
-    read -r -p "Pilihan [1-3]: " ins_opt
-    case "$ins_opt" in
-      1) bun add -g 9router ;;
-      2) npm install -g 9router ;;
-      *) ;;
-    esac
-  fi
-
-  start_shell
-}
-
-start_hermes_standalone() {
-  echo -e "\n${YELLOW}[Hermes Agent]${RESET} Manajemen Container Docker..."
-
-  if [ ! -d "$HERMES_DIR" ]; then
-    echo -e "${RED}Folder Hermes tidak ditemukan: ${HERMES_DIR}${RESET}"
-    start_shell
-    return
-  fi
-
-  cd "$HERMES_DIR" || exit 1
-
-  if ! command -v docker &>/dev/null; then
-    echo -e "${RED}Docker tidak terdeteksi di sistem host.${RESET}"
-    start_shell
-    return
-  fi
-
-  RUNNING_CONTAINER=$(docker ps --filter "name=$HERMES_CONTAINER" --format '{{.Names}}' | head -n 1)
-
-  if [ -n "$RUNNING_CONTAINER" ]; then
-    echo -e "${GREEN}✓ Container aktif:${RESET} $RUNNING_CONTAINER"
-    echo -e "${BONE}Menu Aksi Hermes:${RESET}"
-    echo -e "  ${GOLD}1)${RESET} Masuk Shell Container ${GRAY}(docker exec bash)${RESET}"
-    echo -e "  ${GOLD}2)${RESET} Streaming Log Container ${GRAY}(docker logs -f)${RESET}"
-    echo -e "  ${GOLD}3)${RESET} Restart Container ${GRAY}(docker compose restart)${RESET}"
-    echo -e "  ${GOLD}4)${RESET} Terminal Shell Lokal"
-    echo ""
-    read -r -p "Pilihan [1-4] (Default 1): " h_act
-    case "$h_act" in
-      2) docker logs -f --tail 100 "$RUNNING_CONTAINER" ;;
-      3) docker compose restart ;;
-      4) ;;
-      *) docker exec -it "$RUNNING_CONTAINER" bash || docker exec -it "$RUNNING_CONTAINER" sh ;;
-    esac
-  else
-    echo -e "${GRAY}Container '$HERMES_CONTAINER' belum aktif.${RESET}"
-    echo -e "  ${GOLD}1)${RESET} Jalankan Container ${GRAY}(docker compose up -d)${RESET}"
-    echo -e "  ${GOLD}2)${RESET} Buka Terminal di folder ${HERMES_DIR}"
-    read -r -p "Pilihan [1-2] (Default 1): " up_act
-    if [ "$up_act" != "2" ]; then
-      docker compose up -d
-      sleep 1
-      NEW_C=$(docker ps --filter "name=$HERMES_CONTAINER" --format '{{.Names}}' | head -n 1)
-      if [ -n "$NEW_C" ]; then
-        docker exec -it "$NEW_C" bash || docker exec -it "$NEW_C" sh
-      fi
-    fi
+    echo -e "${RED}CLI '9router' belum terpasang.${RESET}"
+    echo -e "Pasang dengan: ${GOLD}bun add -g 9router${RESET} atau ${GOLD}npm install -g 9router${RESET}"
   fi
 
   start_shell
@@ -228,13 +253,10 @@ start_shell() {
   bash --rcfile "$WORKSPACE_DIR/config/workspace-bashrc" -i
 }
 
-# Evaluasi Mode Eksekusi
+# Evaluasi Mode Eksekusi Awal
 case "$DEFAULT_AGENT" in
   "unified")
     start_unified
-    ;;
-  "hermes")
-    start_hermes_standalone
     ;;
   "9router")
     start_9router_standalone
@@ -243,16 +265,29 @@ case "$DEFAULT_AGENT" in
     start_shell
     ;;
   *)
-    echo -e "${BONE}Pilih Mode AI Agent untuk Panel ini:${RESET}"
-    echo -e "  ${GOLD}1)${RESET} ${BONE}Unified Mode${RESET} ${GREEN}(9router + Hermes Connected)${RESET} ${GRAY}[Rekomendasi]${RESET}"
-    echo -e "  ${GOLD}2)${RESET} ${CYAN}9router Gateway Server${RESET} ${GRAY}(Live Logs di Port :${NINEROUTER_PORT})${RESET}"
-    echo -e "  ${GOLD}3)${RESET} ${YELLOW}Hermes Agent (Docker)${RESET} ${GRAY}(Shell Container / Log / Restart)${RESET}"
+    clear
+    echo -e "${GOLD}===============================================${RESET}"
+    echo -e "${BONE}       ⚡ GASKENLE AI AGENT ECOSYSTEM ⚡       ${RESET}"
+    echo -e "${GRAY}      9router Gateway  <───>  Hermes Docker    ${RESET}"
+    echo -e "${GOLD}===============================================${RESET}"
+    echo -e "${BONE}Pilih Mode untuk Panel Kiri ini:${RESET}"
+    echo -e "  ${GOLD}1)${RESET} ${BONE}Unified Mode${RESET} ${GREEN}(Langsung Siap Prompt Hermes Agent!)${RESET} ${GRAY}[Default]${RESET}"
+    echo -e "  ${GOLD}2)${RESET} ${CYAN}9router Gateway Console${RESET} ${GRAY}(Live Logs & Server Status)${RESET}"
+    echo -e "  ${GOLD}3)${RESET} ${YELLOW}Terminal Shell Container${RESET} ${GRAY}(Bash root di container)${RESET}"
     echo -e "  ${GOLD}4)${RESET} ${BONE}Terminal Shell Biasa${RESET} ${GRAY}(Bash Workspace)${RESET}"
     echo ""
     read -r -p "Pilihan [1-4] (Default 1): " choice
     case "$choice" in
       2) start_9router_standalone ;;
-      3) start_hermes_standalone ;;
+      3)
+        RUNNING_CONTAINER=$(docker ps --filter "name=$HERMES_CONTAINER" --format '{{.Names}}' | head -n 1)
+        if [ -n "$RUNNING_CONTAINER" ]; then
+          docker exec -it -w /workspace "$RUNNING_CONTAINER" bash
+        else
+          start_unified
+        fi
+        start_shell
+        ;;
       4) start_shell ;;
       *) start_unified ;;
     esac

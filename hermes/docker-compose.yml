@@ -3,18 +3,19 @@ services:
     image: nousresearch/hermes-agent:latest
     container_name: ${HERMES_CONTAINER_NAME:-gasken-hermes}
     restart: unless-stopped
-    ports:
-      # Port lokal Hermes Gateway
-      - "127.0.0.1:${HERMES_PORT:-6666}:8642"
+    # Mode host memberikan performa maksimal 0 ms & akses langsung ke 9router (127.0.0.1:20128)
+    network_mode: "host"
     environment:
-      # Terhubung langsung ke 9router Gateway via host gateway
-      - OPENAI_BASE_URL=${NINEROUTER_GATEWAY_URL:-http://host.docker.internal:20128/v1}
+      # Terhubung langsung ke 9router di localhost
+      - OPENAI_BASE_URL=http://127.0.0.1:${NINEROUTER_PORT:-20128}/v1
       - OPENAI_API_KEY=${OPENAI_API_KEY:-9router-local}
       - MODEL=${HERMES_MODEL:-hermes-3-llama-3.1-8b}
     volumes:
       # Persistensi data internal & sesi Hermes
       - ./data:/opt/data
       - ./workspace:/opt/workspace
+      # Mount workspace GaskenLE agar agent bisa langsung bekerja pada file proyek
+      - ../:/workspace:rw
     security_opt:
       - no-new-privileges:true
       - apparmor=docker-default
@@ -32,12 +33,4 @@ services:
           cpus: '2.0'
           memory: 2G
           pids: 300
-    extra_hosts:
-      # Mengizinkan container mengakses 9router yang berjalan di host Linux
-      - "host.docker.internal:host-gateway"
     command: gateway run
-
-networks:
-  default:
-    name: gasken-hermes-net
-    driver: bridge
