@@ -1,68 +1,65 @@
 /* ==========================================================================
-   CODE.CSS - Styling Blok Kode, Inline Code, & Syntax Highlighting
+   CODE.CSS - Styling Blok Kode Tema Emas + Tulang
    ========================================================================== */
 
-/* Inline Code (contoh: `gasken`) */
+/* Inline Code */
 .markdown-section :not(pre) > code {
   background-color: var(--code-inline-bg) !important;
   color: var(--code-inline-color) !important;
   font-family: var(--font-mono) !important;
-  font-size: 0.875em !important;
-  padding: 0.2rem 0.45rem !important;
+  font-size: 0.85em !important;
+  padding: 0.15rem 0.4rem !important;
   border-radius: var(--border-radius-sm) !important;
   border: 1px solid var(--border-color) !important;
-  white-space: normal;
 }
 
-/* Blok Kode Utama (`pre` & `code`) */
+/* Blok Kode Utama */
 .markdown-section pre {
   background-color: var(--code-bg) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: var(--border-radius-md) !important;
-  padding: 1rem 1.25rem !important;
-  margin: 1.25rem 0 !important;
+  padding: 0.85rem 1.1rem !important;
+  margin: 1rem 0 !important;
   overflow-x: auto;
-  position: relative;
 }
 
 .markdown-section pre > code {
   background-color: transparent !important;
   color: var(--text-primary) !important;
   font-family: var(--font-mono) !important;
-  font-size: 0.88rem !important;
-  line-height: 1.6 !important;
+  font-size: 0.86rem !important;
+  line-height: 1.55 !important;
   padding: 0 !important;
   border: none !important;
 }
 
-/* Tombol Salin Kode (Copy Code Plugin) */
+/* Copy Button */
 .docsify-copy-code-button {
   background-color: var(--bg-tertiary) !important;
   color: var(--text-secondary) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: var(--border-radius-sm) !important;
-  font-size: 0.75rem !important;
-  padding: 4px 8px !important;
-  transition: all 0.2s ease;
+  font-size: 0.72rem !important;
+  padding: 3px 7px !important;
 }
 
 .docsify-copy-code-button:hover {
   background-color: var(--accent-color) !important;
-  color: #000000 !important;
+  color: #111215 !important;
   font-weight: 600;
 }
 
-/* Token Syntax Highlighting (Prism Dark) */
+/* Prism Token Highlighting (Gold Accent Palette) */
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #6a737d !important; /* Abu-abu komentar */
+  color: #8e8a7e !important;
   font-style: italic;
 }
 
 .token.punctuation {
-  color: #d1d5db !important;
+  color: #c7c3b8 !important;
 }
 
 .token.property,
@@ -71,7 +68,7 @@
 .token.number,
 .token.constant,
 .token.symbol {
-  color: #79c0ff !important; /* Biru muda */
+  color: #e5c158 !important;
 }
 
 .token.selector,
@@ -79,31 +76,28 @@
 .token.string,
 .token.char,
 .token.builtin {
-  color: #a5d6ff !important; /* Biru string */
+  color: #f5d77f !important;
 }
 
 .token.operator,
 .token.entity,
 .token.url,
-.language-css .token.string,
-.style .token.string {
-  color: #ff7b72 !important; /* Merah operator */
+.language-css .token.string {
+  color: #f87171 !important;
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: #ff7b72 !important; /* Merah / Pink keyword */
+  color: #fbbf24 !important;
   font-weight: 600;
 }
 
 .token.function,
 .token.class-name {
-  color: #d2a8ff !important; /* Ungu fungsi */
+  color: #60a5fa !important;
 }
 
-.token.regex,
-.token.important,
 .token.variable {
-  color: #ffa657 !important; /* Jingga variabel */
+  color: #f4f1ea !important;
 }

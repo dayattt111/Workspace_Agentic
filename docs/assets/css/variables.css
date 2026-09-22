@@ -1,42 +1,40 @@
 /* ==========================================================================
-   VARIABLES.CSS - Konfigurasi Token Desain & Tema (Ubah Warna di Sini)
+   VARIABLES.CSS - Konfigurasi Tema Tulang + Emas (Bone White & Gold)
    ========================================================================== */
 
 :root {
-  /* --- Palet Warna Utama --- */
-  --bg-primary: #0d1117;          /* Latar belakang halaman utama */
-  --bg-secondary: #161b22;        /* Latar belakang sidebar & card */
-  --bg-tertiary: #21262d;         /* Latar belakang hover & input */
-  --border-color: #30363d;        /* Garis batas pemisah */
-  --border-subtle: rgba(240, 246, 252, 0.1);
+  /* --- Palet Warna Utama (Dominan Tulang & Emas) --- */
+  --bg-primary: #111215;          /* Charcoal Gelap Elegan */
+  --bg-secondary: #17181c;        /* Background Sidebar & Card */
+  --bg-tertiary: #222429;         /* Background Hover & Input */
+  --border-color: #2a2c33;        /* Garis Pemisah */
+  --border-subtle: rgba(229, 193, 88, 0.2);
 
-  /* --- Warna Aksen & Status --- */
-  --accent-color: #10b981;        /* Hijau Emerald khas Gasken */
-  --accent-hover: #34d399;        /* Hijau terang saat hover */
-  --accent-glow: rgba(16, 185, 129, 0.15);
-  --info-color: #38bdf8;          /* Biru informasi */
-  --warn-color: #f59e0b;          /* Kuning peringatan */
-  --danger-color: #ef4444;        /* Merah bahaya */
+  /* --- Warna Aksen Emas (Gold) --- */
+  --accent-color: #e5c158;        /* Emas Utama (Seperti Logo) */
+  --accent-hover: #f5d77f;        /* Emas Terang saat Hover */
+  --accent-glow: rgba(229, 193, 88, 0.18);
+  --info-color: #60a5fa;
+  --warn-color: #f59e0b;
 
-  /* --- Warna Tipografi --- */
-  --text-primary: #f0f6fc;        /* Teks utama (putih lembut) */
-  --text-secondary: #8b949e;      /* Teks sekunder / deskripsi */
-  --text-muted: #6e7681;          /* Teks redup */
-  --heading-color: #ffffff;       /* Warna judul */
+  /* --- Tipografi Warna Tulang (Bone White / Cream) --- */
+  --text-primary: #f4f1ea;        /* Warna Tulang Utama */
+  --text-secondary: #c7c3b8;      /* Warna Tulang Redup */
+  --text-muted: #8e8a7e;          /* Keterangan Tambahan */
+  --heading-color: #e5c158;       /* Judul Berwarna Emas */
 
   /* --- Blok Kode & Syntax --- */
-  --code-bg: #161b22;             /* Background blok kode */
-  --code-inline-bg: #21262d;      /* Background inline code */
-  --code-inline-color: #7ee787;   /* Warna teks inline code */
+  --code-bg: #17181c;
+  --code-inline-bg: #222429;
+  --code-inline-color: #e5c158;
 
-  /* --- Tata Letak & Dimensi --- */
-  --sidebar-width: 290px;         /* Lebar panel menu samping */
-  --content-max-width: 880px;     /* Lebar maksimal area baca konten */
+  /* --- Dimensi & Spacing Rapih --- */
+  --sidebar-width: 280px;
+  --content-max-width: 860px;
   --border-radius-sm: 6px;
   --border-radius-md: 10px;
-  --border-radius-lg: 14px;
 
-  /* --- Font Typography --- */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  /* --- Font --- */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Monaco, Consolas, monospace;
 }

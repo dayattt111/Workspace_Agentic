@@ -1,37 +1,34 @@
 /* ==========================================================================
-   SIDEBAR.CSS - Styling Panel Navigasi Samping & Kotak Pencarian
+   SIDEBAR.CSS - Styling Sidebar Tema Emas + Tulang
    ========================================================================== */
 
-/* Panel Sidebar Keseluruhan */
+/* Panel Sidebar */
 .sidebar {
   background-color: var(--bg-secondary) !important;
   border-right: 1px solid var(--border-color) !important;
   color: var(--text-secondary);
   width: var(--sidebar-width);
-  padding-top: 1.5rem;
+  padding-top: 1rem;
 }
 
-/* Judul Aplikasi di Atas Sidebar */
+/* Judul & Logo */
 .app-name {
-  margin: 0.5rem 1rem 1.25rem 1rem;
+  margin: 0.25rem 0.75rem 1rem 0.75rem !important;
+  text-align: center;
 }
 
 .app-name-link {
-  color: var(--heading-color) !important;
-  font-size: 1.2rem !important;
+  color: var(--accent-color) !important;
+  font-size: 1.1rem !important;
   font-weight: 700 !important;
   text-decoration: none !important;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 /* Kotak Pencarian */
 .search {
-  padding: 0 1rem 1rem 1rem !important;
+  padding: 0 0.75rem 0.75rem 0.75rem !important;
   border-bottom: 1px solid var(--border-color) !important;
-  margin-bottom: 1rem !important;
+  margin-bottom: 0.75rem !important;
 }
 
 .search input {
@@ -39,11 +36,11 @@
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary) !important;
   border-radius: var(--border-radius-sm) !important;
-  padding: 0.5rem 0.75rem !important;
-  font-size: 0.875rem !important;
+  padding: 0.45rem 0.65rem !important;
+  font-size: 0.85rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .search input:focus {
@@ -56,42 +53,31 @@
   color: var(--text-muted) !important;
 }
 
-/* Hasil Pencarian */
-.search .results-panel {
-  background-color: var(--bg-secondary) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: var(--border-radius-sm);
-  color: var(--text-primary) !important;
-}
-
-.search .matching-post {
-  border-bottom: 1px solid var(--border-color) !important;
-}
-
-/* Navigasi Menu Sidebar */
+/* Menu Navigasi */
 .sidebar ul {
   padding-left: 0;
   margin: 0;
 }
 
 .sidebar ul li {
-  margin: 0.15rem 0.75rem;
-  font-size: 0.925rem;
+  margin: 0.1rem 0.5rem;
+  font-size: 0.88rem;
 }
 
 .sidebar ul li p {
-  color: var(--text-muted);
-  font-size: 0.75rem;
+  color: var(--accent-color);
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 1.25rem 0 0.5rem 0.5rem;
+  letter-spacing: 0.06em;
+  margin: 1rem 0 0.4rem 0.4rem;
+  opacity: 0.9;
 }
 
 .sidebar ul li a {
   color: var(--text-secondary) !important;
   text-decoration: none !important;
-  padding: 0.4rem 0.6rem !important;
+  padding: 0.35rem 0.55rem !important;
   border-radius: var(--border-radius-sm) !important;
   display: block;
   transition: all 0.15s ease-in-out;
@@ -107,15 +93,4 @@
   background-color: var(--accent-glow) !important;
   font-weight: 600;
   border-left: 3px solid var(--accent-color);
-}
-
-/* Tombol Toggle Sidebar di Mobile */
-.sidebar-toggle {
-  background-color: transparent !important;
-  color: var(--text-primary) !important;
-  padding: 10px !important;
-}
-
-.sidebar-toggle span {
-  background-color: var(--text-primary) !important;
 }

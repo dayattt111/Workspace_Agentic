@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CONTENT.CSS - Tipografi, Layout Konten Utama, Tabel, & Callouts
+   CONTENT.CSS - Tipografi Tulang + Emas & Spacing Kompak
    ========================================================================== */
 
 /* Halaman & Kontainer Utama */
@@ -7,51 +7,67 @@ body {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
   font-family: var(--font-sans) !important;
-  line-height: 1.65;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
 .content {
-  padding-top: 2rem;
+  padding-top: 1rem !important;
   background-color: var(--bg-primary) !important;
 }
 
 .markdown-section {
   max-width: var(--content-max-width) !important;
-  padding: 2rem 2.5rem 4rem !important;
+  padding: 1rem 1.5rem 3rem !important;
   color: var(--text-primary) !important;
 }
 
-/* Tipografi Judul */
-.markdown-section h1 {
-  font-size: 2rem;
-  font-weight: 700;
+/* Tipografi Judul (Semua Berwarna Emas) */
+.markdown-section h1,
+.markdown-section h2,
+.markdown-section h3,
+.markdown-section h4,
+.markdown-section h5,
+.markdown-section h6 {
   color: var(--heading-color) !important;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.6rem;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-.markdown-section h2 {
-  font-size: 1.45rem;
-  font-weight: 600;
-  color: var(--heading-color) !important;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.4rem;
-  margin-top: 2rem;
+.markdown-section h1 {
+  font-size: 1.85rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-top: 0.75rem;
   margin-bottom: 1rem;
 }
 
-.markdown-section h3 {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--heading-color) !important;
-  margin-top: 1.75rem;
+.markdown-section h2 {
+  font-size: 1.35rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.35rem;
+  margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
 
-/* Tautan Teks */
+.markdown-section h3 {
+  font-size: 1.1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-section p {
+  color: var(--text-primary) !important;
+  margin: 0.65rem 0 !important;
+  font-size: 0.95rem;
+}
+
+.markdown-section strong {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Tautan Teks (Emas) */
 .markdown-section a {
   color: var(--accent-color) !important;
   font-weight: 500;
@@ -67,23 +83,22 @@ body {
 .markdown-section hr {
   border: none;
   border-top: 1px solid var(--border-color);
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
-/* Kutipan & Callout (Blockquotes) */
+/* Kutipan / Callout Beraksen Emas */
 .markdown-section blockquote {
-  background-color: rgba(16, 185, 129, 0.08) !important;
+  background-color: rgba(229, 193, 88, 0.08) !important;
   border-left: 4px solid var(--accent-color) !important;
   border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
   color: var(--text-primary) !important;
-  margin: 1.5rem 0 !important;
-  padding: 1rem 1.25rem !important;
+  margin: 1rem 0 !important;
+  padding: 0.75rem 1rem !important;
 }
 
 .markdown-section blockquote p {
   color: var(--text-primary) !important;
   margin: 0 !important;
-  font-size: 0.95rem;
 }
 
 /* Tabel Markdown */
@@ -91,11 +106,9 @@ body {
   display: table !important;
   width: 100% !important;
   border-collapse: collapse !important;
-  margin: 1.5rem 0 !important;
+  margin: 1rem 0 !important;
   border: 1px solid var(--border-color) !important;
-  border-radius: var(--border-radius-sm);
-  overflow: hidden;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .markdown-section th {
@@ -103,13 +116,13 @@ body {
   color: var(--heading-color) !important;
   font-weight: 600 !important;
   border: 1px solid var(--border-color) !important;
-  padding: 0.75rem 1rem !important;
+  padding: 0.6rem 0.85rem !important;
   text-align: left;
 }
 
 .markdown-section td {
   border: 1px solid var(--border-color) !important;
-  padding: 0.7rem 1rem !important;
+  padding: 0.55rem 0.85rem !important;
   color: var(--text-primary) !important;
 }
 
@@ -121,13 +134,15 @@ body {
   background-color: var(--bg-tertiary) !important;
 }
 
-/* List / Daftar */
+/* List / Daftar lebih Rapat */
 .markdown-section ul, 
 .markdown-section ol {
-  padding-left: 1.5rem;
-  color: var(--text-primary);
+  padding-left: 1.35rem;
+  color: var(--text-primary) !important;
+  margin: 0.5rem 0;
 }
 
 .markdown-section li {
-  margin: 0.35rem 0;
+  margin: 0.25rem 0 !important;
+  color: var(--text-primary) !important;
 }
