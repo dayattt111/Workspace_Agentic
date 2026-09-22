@@ -3,8 +3,11 @@
 # ==============================================================================
 # GaskenLE - Smart AI Agent & Router Launcher (Pane 0)
 # Skema: 9router (Gateway LLM Host) <───> Hermes Agent (Docker) <───> GaskenLE
-# Pengguna langsung masuk ke Prompt Interaktif Hermes Agent
+# Menjaga isolasi keamanan sandbox di direktori proyek aktif ($PWD)
 # ==============================================================================
+
+# Tangkap direktori proyek aktif tempat pengguna memanggil gasken
+CURRENT_PROJECT_DIR="$PWD"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -27,7 +30,7 @@ fi
 HERMES_DIR="${HERMES_DIR:-$WORKSPACE_DIR/hermes}"
 HERMES_CONTAINER="${HERMES_CONTAINER_NAME:-gasken-hermes}"
 HERMES_PORT="${HERMES_PORT:-6666}"
-HERMES_MODEL="${HERMES_MODEL:-hermes-3-llama-3.1-8b}"
+HERMES_MODEL="${HERMES_MODEL:-dev-architect-hikaruu}"
 
 NINEROUTER_DIR="${CUSTOM_NINEROUTER_DIR:-$WORKSPACE_DIR/9router}"
 NINEROUTER_PORT="${NINEROUTER_PORT:-20128}"
@@ -134,9 +137,16 @@ start_unified() {
 
   RUNNING_CONTAINER=$(docker ps --filter "name=$HERMES_CONTAINER" --format '{{.Names}}' | head -n 1)
 
-  if [ -z "$RUNNING_CONTAINER" ]; then
-    echo -e "${YELLOW}[Hermes]${RESET} Menjalankan container Docker Hermes..."
-    docker compose up -d
+  # Cek mount aktif /workspace untuk memastikan isolasi folder proyek yang tepat
+  local current_mount=""
+  if [ -n "$RUNNING_CONTAINER" ]; then
+    current_mount=$(docker inspect "$RUNNING_CONTAINER" --format '{{range .Mounts}}{{if eq .Destination "/workspace"}}{{.Source}}{{end}}{{end}}' 2>/dev/null)
+  fi
+
+  # Jika container belum jalan atau folder mount berbeda dari CURRENT_PROJECT_DIR, sesuaikan mount
+  if [ -z "$RUNNING_CONTAINER" ] || [ "$current_mount" != "$CURRENT_PROJECT_DIR" ]; then
+    echo -e "${YELLOW}[Hermes]${RESET} Mengisolasi sandbox agent ke proyek: ${GOLD}$CURRENT_PROJECT_DIR${RESET}..."
+    PROJECT_DIR="$CURRENT_PROJECT_DIR" docker compose up -d
     sleep 1
     RUNNING_CONTAINER=$(docker ps --filter "name=$HERMES_CONTAINER" --format '{{.Names}}' | head -n 1)
   fi
@@ -144,7 +154,7 @@ start_unified() {
   if [ -n "$RUNNING_CONTAINER" ]; then
     echo -e "${GREEN}✓ Hermes Container Aktif:${RESET} $RUNNING_CONTAINER"
     echo -e "${GRAY}Router Endpoint :${RESET} ${CYAN}http://127.0.0.1:${NINEROUTER_PORT}/v1${RESET}"
-    echo -e "${GRAY}Workspace Mount :${RESET} ${GOLD}/workspace${RESET} -> Root Proyek GaskenLE"
+    echo -e "${GRAY}Workspace Mount :${RESET} ${GOLD}/workspace${RESET} -> $CURRENT_PROJECT_DIR (Sandbox Terisolasi)"
 
     # Sinkronisasi endpoint koneksi Hermes ke 9router
     configure_hermes_endpoint "$RUNNING_CONTAINER"
@@ -152,7 +162,7 @@ start_unified() {
     echo -e "\n${BONE}▶ Membuka Interactive Hermes Agent... (Siap Prompt!)${RESET}"
     echo -e "${GRAY}Tips: Ketik /exit atau Ctrl+C untuk keluar ke menu manajemen.${RESET}\n"
     
-    # LANGSUNG BUKA PROMPT HERMES AGENT
+    # LANGSUNG BUKA PROMPT HERMES AGENT DI DALAM /workspace PROYEK
     docker exec -it -w /workspace "$RUNNING_CONTAINER" /opt/hermes/bin/hermes
   else
     echo -e "${RED}Gagal menjalankan container Hermes.${RESET}"
@@ -259,6 +269,7 @@ start_9router_standalone() {
 
 start_shell() {
   echo -e "\n${GRAY}Memuat shell terminal GaskenLE...${RESET}"
+  cd "$CURRENT_PROJECT_DIR" || true
   bash --rcfile "$WORKSPACE_DIR/config/workspace-bashrc" -i
 }
 
@@ -282,7 +293,7 @@ case "$DEFAULT_AGENT" in
     echo -e "${BONE}Pilih Mode untuk Panel Kiri ini:${RESET}"
     echo -e "  ${GOLD}1)${RESET} ${BONE}Unified Mode${RESET} ${GREEN}(Langsung Siap Prompt Hermes Agent!)${RESET} ${GRAY}[Default]${RESET}"
     echo -e "  ${GOLD}2)${RESET} ${CYAN}9router Gateway Console${RESET} ${GRAY}(Live Logs & Server Status)${RESET}"
-    echo -e "  ${GOLD}3)${RESET} ${YELLOW}Terminal Shell Container${RESET} ${GRAY}(Bash root di container)${RESET}"
+    echo -e "  ${GOLD}3)${RESET} ${YELLOW}Terminal Shell Container${RESET} ${GRAY}(Bash di /workspace proyek)${RESET}"
     echo -e "  ${GOLD}4)${RESET} ${BONE}Terminal Shell Biasa${RESET} ${GRAY}(Bash Workspace)${RESET}"
     echo ""
     read -r -p "Pilihan [1-4] (Default 1): " choice

@@ -14,8 +14,8 @@ services:
       # Persistensi data internal & sesi Hermes
       - ./data:/opt/data
       - ./workspace:/opt/workspace
-      # Mount workspace GaskenLE agar agent bisa langsung bekerja pada file proyek
-      - ../:/workspace:rw
+      # Mount proyek aktif secara dinamis dan terisolasi
+      - ${PROJECT_DIR:-../}:/workspace:rw
     security_opt:
       - no-new-privileges:true
       - apparmor=docker-default
