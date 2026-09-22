@@ -1,4 +1,4 @@
-# 🚀 Penggunaan Harian
+# Penggunaan Harian
 
 Panduan alur kerja harian menggunakan Gaskenle untuk meningkatkan produktivitas tanpa distraksi dan tanpa beban memori.
 

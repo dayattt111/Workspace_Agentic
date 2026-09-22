@@ -8,7 +8,7 @@
 
 ---
 
-## 🎯 Filosofi & Tujuan Proyek
+## Filosofi & Tujuan Proyek
 
 **Gaskenle** dirancang untuk developer yang menginginkan alur kerja modern dan terintegrasi tanpa terbebani oleh konsumsi resource IDE berbasis Electron/GUI yang rakus RAM. 
 
@@ -23,7 +23,7 @@ Membuka file kode secara instan dan membuka pratinjau gambar secara native tanpa
 
 ---
 
-## 📊 Benchmark Performa
+## Benchmark Performa
 
 Perbandingan konsumsi sumber daya saat idle antara IDE modern standar dan Gaskenle:
 
@@ -36,7 +36,7 @@ Perbandingan konsumsi sumber daya saat idle antara IDE modern standar dan Gasken
 
 ---
 
-## 🖥️ Arsitektur Visual Workspace
+## Arsitektur Visual Workspace
 
 Saat sesi aktif, layar terminal dibagi menjadi 3 panel independen dengan rasio ergonomis:
 

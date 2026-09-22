@@ -1,4 +1,4 @@
-# ⚙️ Arsitektur & Detail Konfigurasi
+# Arsitektur & Detail Konfigurasi
 
 Halaman ini mengulas anatomi setiap berkas konfigurasi yang menyusun ekosistem Gaskenle.
 

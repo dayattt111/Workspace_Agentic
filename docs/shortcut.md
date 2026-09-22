@@ -1,4 +1,4 @@
-# ⌨️ Daftar Pintasan (Shortcuts)
+# Daftar Pintasan (Shortcuts)
 
 Referensi lengkap pintasan keyboard (*keybindings*) untuk navigasi cepat di Gaskenle tanpa mengangkat tangan dari keyboard.
 

@@ -1,4 +1,4 @@
-# 📦 Instalasi & Prasyarat
+# Instalasi & Prasyarat
 
 Halaman ini memandu instalasi dependensi sistem dan penyiapan berkas konfigurasi agar Gaskenle dapat beroperasi sempurna.
 

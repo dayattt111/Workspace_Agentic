@@ -1,4 +1,4 @@
-# 🤖 Koneksi AI Agent & Protokol Keamanan
+# Koneksi AI Agent & Protokol Keamanan
 
 Gaskenle dirancang dari awal untuk mengakomodasi kolaborasi manusia dan AI Agent (*pair programming*) dengan pemisahan peran yang tegas dan aman.
 
@@ -30,7 +30,7 @@ Salah satu keunggulan arsitektur Gaskenle adalah integrasi event kernel Linux:
 
 Untuk menjaga kestabilan sistem operasi dan mencegah kerusakan pada konfigurasi OS penting, setiap AI Agent (termasuk Antigravity) yang beroperasi pada sistem ini terikat oleh **Gaskenle Protocol**:
 
-### 🛡️ ATURAN 1: Larangan Modifikasi Tanpa Persetujuan (*Explicit Consent*)
+### ATURAN 1: Larangan Modifikasi Tanpa Persetujuan (*Explicit Consent*)
 1. Agen dilarang keras membuat skrip otomatis untuk menimpa (*overwrite*), menghapus (*rm*), atau mengubah file di lokasi:
    * `/home/hikaruu/gasken_workspace/*`
    * `~/.config/yazi/*`
@@ -42,11 +42,11 @@ Untuk menjaga kestabilan sistem operasi dan mencegah kerusakan pada konfigurasi 
    * **Alasan Teknis & Dampak:** (Mengapa diperlukan dan bagaimana dampaknya terhadap performa)
    * **Potongan Kode:** Diff atau blok kode yang akan diterapkan.
 
-### 🛡️ ATURAN 2: Pola Verifikasi Manual (*Human-in-the-Loop*)
+### ATURAN 2: Pola Verifikasi Manual (*Human-in-the-Loop*)
 1. Agen dilarang menjalankan inspeksi filesystem secara liar di luar direktori proyek.
 2. Jika Agen membutuhkan log atau isi berkas konfigurasi sistem tertentu, Agen wajib meminta instruksi secara transparan kepada pengguna untuk dieksekusi di Panel Git/Execution.
 
-### 🛡️ ATURAN 3: Prinsip Ekstensi Berkelanjutan
+### ATURAN 3: Prinsip Ekstensi Berkelanjutan
 1. **Pertahankan Latensi 0 ms:** Fitur baru tidak boleh menambahkan layer shell wrapper yang lambat. Gunakan native executable C/Rust atau placeholder `%s`.
 2. **Isolasi Konfigurasi:** Skrip workspace dirancang mandiri agar tidak mengotori environment global sistem operasi.
 
