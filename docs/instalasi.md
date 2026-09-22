@@ -85,11 +85,11 @@ image = [
 
 [open]
 rules = [
+  { mime = "image/*", use = "image" },
   { mime = "text/*", use = "edit" },
   { mime = "application/json", use = "edit" },
   { mime = "application/javascript", use = "edit" },
-  { mime = "image/*", use = "image" },
-  { name = "*", use = "edit" }
+  { url = "*", use = "edit" }
 ]
 ```
 

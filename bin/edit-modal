@@ -1,24 +1,78 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# GaskenLE - Modal Terminal Editor Opener
-# Membuka file dalam floating popup modal tmux yang luas (88% x 85%) dengan
-# border rounded, lalu otomatis kembali ke Yazi setelah Nano ditutup.
+# GaskenLE - Modal Terminal Editor Opener (dengan Logging Terisolasi)
 # ==============================================================================
 
+LOG_DIR="/home/hikaruu/gasken_workspace/logs"
+LOG_FILE="$LOG_DIR/edit-modal.log"
+
+mkdir -p "$LOG_DIR"
+
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"
+}
+
+log "=== EDIT-MODAL TRIGGERED ==="
+log "PWD: $PWD"
+log "Total Args (\$#): $#"
+log "All Args (\$@): $*"
+log "Arg 1 (\$1): $1"
+log "Arg 2 (\$2): $2"
+log "Arg 0 (\$0): $0"
+log "TMUX: $TMUX"
+log "TERM: $TERM"
+log "YAZI_ID: $YAZI_ID"
+
+# 1. Resolusi File Target
 TARGET="$1"
-[ -z "$TARGET" ] && exit 0
+
+# Fallback jika argumen pertama kosong (misal karena Yazi meneruskan di arg 0 atau arg 2)
+if [ -z "$TARGET" ]; then
+  if [ -n "$2" ] && [ -e "$2" ]; then
+    TARGET="$2"
+  elif [ -n "$0" ] && [ -e "$0" ]; then
+    TARGET="$0"
+  fi
+fi
+
+# Fallback IPC Yazi jika masih kosong (ambil file yang sedang disorot kursor)
+if [ -z "$TARGET" ] && [ -n "$YAZI_ID" ]; then
+  log "Target kosong, mencoba ambil via ya emit-to..."
+  TARGET=$(ya emit-to "$YAZI_ID" 2>/dev/null)
+  log "Hasil emit-to: $TARGET"
+fi
+
+log "Resolved TARGET: $TARGET"
+
+if [ -z "$TARGET" ]; then
+  log "ERROR: TARGET tetap kosong! Menghentikan eksekusi."
+  exit 1
+fi
+
+if [ ! -e "$TARGET" ]; then
+  log "WARNING: Berkas '$TARGET' tidak ditemukan di filesystem!"
+fi
 
 FILENAME=$(basename "$TARGET")
 
-# Jika berada di dalam sesi tmux, luncurkan modal popup
+# 2. Eksekusi Modal Terminal
 if [ -n "$TMUX" ]; then
+  log "Meluncurkan tmux display-popup untuk file: $TARGET"
+  
+  # Jalankan tmux popup dengan error redirection ke log
   tmux display-popup -w 88% -h 85% -b rounded \
+    -d "$PWD" \
     -T " Edit: $FILENAME (Ctrl+O: Simpan | Ctrl+X: Keluar) " \
-    -s "bg=#111215,fg=#f4f1ea" \
-    -S "fg=#e5c158" \
-    -E "nano \"$TARGET\""
+    -s "fg=yellow" \
+    -E "nano \"$TARGET\"" 2>> "$LOG_FILE"
+  
+  POPUP_EXIT=$?
+  log "tmux display-popup exit code: $POPUP_EXIT"
 else
-  # Fallback jika dijalankan di luar tmux
+  log "Di luar tmux, memanggil nano biasa..."
   nano "$TARGET"
+  log "nano exit code: $?"
 fi
+
+log "=== SELESAI ==="
