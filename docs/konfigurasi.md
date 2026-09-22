@@ -71,7 +71,7 @@ Membuka berkas teks dalam **Floating Modal Terminal** yang luas dan melebar, ser
 ```toml
 [opener]
 edit = [
-  { run = '/home/hikaruu/gasken_workspace/bin/edit-modal "$1"', block = true, desc = "Edit Nano (Modal Popup)" }
+  { run = '/home/hikaruu/gasken_workspace/bin/edit-modal %s', orphan = true, desc = "Edit Nano (Modal Popup)" }
 ]
 image = [
   { run = 'eog %s', orphan = true, desc = "Lihat Gambar (EOG)" }
