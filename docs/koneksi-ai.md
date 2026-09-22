@@ -1,91 +1,112 @@
 # Koneksi AI Agent & Protokol Keamanan
 
-GaskenLE dirancang dari awal untuk mengakomodasi kolaborasi manusia dan AI Agent (*pair programming*) dengan pemisahan peran yang tegas, modular, dan aman.
+GaskenLE menyediakan ekosistem AI Agent terintegrasi langsung di dalam proyek dengan skema **Unified Gateway & Agent**.
 
 ---
 
-## 1. Arsitektur Smart AI Launcher (Pane 0)
+## 1. Skema Arsitektur: 9router ⟷ Hermes Agent
 
-Panel 0 (kiri, lebar 40%) difungsikan sebagai pusat komando agen cerdas yang dikendalikan oleh skrip `panes/pane-hermes.sh`.
+Semua lalu lintas model kecerdasan buatan dirutekan secara efisien dan terisolasi:
 
-Skrip peluncur ini bersifat **multi-engine & portabel**, mendukung:
-* **Hermes Agent (Docker):** Menghubungkan secara otomatis ke container Docker Hermes yang terisolasi, baik untuk *attach* shell interaktif maupun inspeksi log realtime.
-* **9router Agentic AI:** Menjalankan gateway server `9router` (CLI Bun) pada port default `20128` atau membuka subshell di ruang kerja 9router.
-* **Terminal Shell Biasa:** Shell Bash workspace mandiri yang diisolasi dengan konfigurasi `config/workspace-bashrc`.
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                       SISTEM HOST                           │
+│                                                             │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │  9router Gateway Server                             │   │
+│   │  (Port 20128 / Default 0.0.0.0)                     │   │
+│   │  • Router LLM Lokal (Ollama) / Cloud API            │   │
+│   └──────────────▲──────────────────────────────────────┘   │
+│                  │ (host.docker.internal:20128/v1)          │
+│                  ▼                                          │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │  Hermes Agent (Docker Container: gasken-hermes)     │   │
+│   │  (Port 6666 lokal host -> 8642 container)           │   │
+│   │  • Folder internal: ./hermes                        │   │
+│   │  • Isolasi volume ./data & ./workspace              │   │
+│   └──────────────▲──────────────────────────────────────┘   │
+│                  │                                          │
+│   ┌──────────────▼──────────────────────────────────────┐   │
+│   │  GaskenLE Pane 0 (panes/pane-hermes.sh)             │   │
+│   │  • Tampilan interaktif shell / streaming log agent  │   │
+│   └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
 
-### Konfigurasi Portabel: `config/agent.conf`
-Seluruh path dan preferensi peluncuran diatur dalam berkas `config/agent.conf`. Berkas ini dapat disalin antar-laptop tanpa merusak repositori git:
+1. **9router Gateway (Host):** Bertindak sebagai gateway cerdas yang mengagregasi model-model AI (Ollama lokal, Groq, OpenAI, Anthropic, OpenRouter).
+2. **Hermes Agent (Docker):** Berjalan di container Docker di dalam folder internal `./hermes`. Hermes memanggil LLM melalui endpoint `http://host.docker.internal:20128/v1` milik 9router.
+3. **GaskenLE Pane 0:** Terminal interaktif di panel kiri tmux yang langsung menghubungkan developer ke dalam sesi Hermes yang sudah siap pakai.
+
+---
+
+## 2. Struktur Internal Proyek
+
+Proyek ini telah dilengkapi dengan runtime & template bawaan sehingga **siap pakai dan portabel** saat di-clone ke laptop mana pun:
+
+### Folder `./hermes`
+* `docker-compose.yml`: Definisi container Hermes, network bridge, resource limits (2 CPU, 2GB RAM), dan koneksi ke `host.docker.internal`.
+* `data/`: Penyimpanan persisten memori & riwayat agent (diabaikan oleh git).
+* `workspace/`: Ruang kerja eksekusi terisolasi (diabaikan oleh git).
+
+### Folder `./9router`
+* `template.config.json`: Template konfigurasi provider LLM kosongan siap pakai.
+* `package.json`: Skrip npm/bun untuk menginstal CLI atau menjalankan server.
+
+---
+
+## 3. Konfigurasi Dinamis & Privat via `.env`
+
+Untuk menjaga keamanan kredensial dan fleksibilitas konfigurasi antar-perangkat, semua pengaturan dapat disesuaikan di file `.env`.
+
+Contoh template telah disediakan di [`.env.example`](file:///home/hikaruu/gasken_workspace/.env.example):
 
 ```bash
-# Lokasi direktori Hermes Agent (Docker)
-HERMES_DIR="${HERMES_DIR:-$HOME/hermes-agents}"
-HERMES_CONTAINER="${HERMES_CONTAINER:-hermes-agent}"
+# --- MODE PELUNCURAN PANE 0 ---
+# "unified" (Rekomendasi) | "menu" | "hermes" | "9router" | "shell"
+AGENT_MODE="menu"
 
-# Lokasi direktori 9router Agentic AI
-NINEROUTER_DIR="${NINEROUTER_DIR:-$HOME/9router-agentic-AI}"
+# --- HERMES AGENT (DOCKER) ---
+HERMES_CONTAINER_NAME="gasken-hermes"
+HERMES_PORT=6666
+HERMES_DIR="" # Kosongkan untuk memakai ./hermes internal
 
-# Mode Default Eksekusi Pane 0:
-# - "menu"    : Tampilkan menu pemilih interaktif (Hermes, 9router, Shell)
-# - "hermes"  : Otomatis langsung menghubungkan ke Hermes Agent (Docker)
-# - "9router" : Otomatis langsung membuka ruang kerja 9router
-# - "shell"   : Terminal shell biasa dengan prompt workspace
-DEFAULT_AGENT="menu"
+# --- 9ROUTER GATEWAY ---
+NINEROUTER_PORT=20128
+NINEROUTER_HOST="0.0.0.0"
+NINEROUTER_GATEWAY_URL="http://host.docker.internal:20128/v1"
+
+# Ingin pakai instalasi 9router pribadi di luar? Isi path di sini:
+# Contoh: CUSTOM_NINEROUTER_DIR="/home/hikaruu/9router-agentic-AI"
+# Jika dikosongkan, GaskenLE otomatis memakai template internal ./9router
+CUSTOM_NINEROUTER_DIR=""
+
+# --- API KEYS (Diisi manual oleh Anda di .env) ---
+OPENAI_API_KEY=""
+ANTHROPIC_API_KEY=""
+GROQ_API_KEY=""
 ```
 
 ---
 
-## 2. Integrasi Hermes Agent (Docker)
+## 4. Opsi Peluncuran Pane 0
 
-Hermes dijalankan dalam wadah Docker terisolasi untuk memastikan keamanan host:
-* **Deteksi Otomatis:** Skrip memeriksa apakah container `hermes-agent` sedang aktif.
-* **Auto-Start:** Jika container belum berjalan, peluncur menawarkan eksekusi `docker compose up -d` secara aman di direktori Hermes.
-* **Interaktivitas:** Pengguna dapat memilih untuk langsung masuk ke sesi shell container (`docker exec -it hermes-agent bash`) atau memantau streaming log (`docker logs -f`).
-* **Fallback Elegan:** Apabila sesi container selesai (exit), terminal tidak menutup pane tmux, melainkan kembali ke shell workspace GaskenLE.
+Saat menjalankan `gasken`, Pane 0 menampilkan menu pemilih:
 
----
-
-## 3. Integrasi 9router Agentic AI
-
-9router berfungsi sebagai gateway routing AI lokal dan multi-provider:
-* **Eksekusi Gateway:** Skrip otomatis mendeteksi CLI `9router` (misal via Bun di `~/.bun/bin/9router`) dan menyediakan opsi menjalankan gateway dengan log server aktif (`9router -l`).
-* **Lingkungan Kerja:** Skrip berpindah ke direktori `NINEROUTER_DIR` sehingga 9router dapat membaca file konfigurasi lokal dan snapshot pencadangan.
-* **Graceful Exit:** Menekan `Ctrl+C` saat memantau server akan mengembalikan pengguna ke subshell terminal tanpa menghentikan sesi tmux.
+1. **🚀 Unified Mode (9router + Hermes Connected):**
+   * Otomatis memeriksa apakah 9router aktif; jika belum, menjalankannya di background (`logs/9router.log`).
+   * Menjalankan container Docker Hermes (`docker compose up -d`).
+   * Membuka sesi shell interaktif langsung ke dalam Hermes Agent yang sudah tersambung ke 9router.
+2. **🌐 9router Gateway Server Saja:**
+   * Menjalankan server 9router dengan live console log di port `20128`.
+3. **🤖 Hermes Agent Saja:**
+   * Masuk ke shell container, streaming log realtime, atau restart container.
+4. **🐚 Terminal Shell Biasa:**
+   * Shell bash workspace standar.
 
 ---
 
-## 4. Sinkronisasi Antar-Proses (Zero-Polling via `inotify`)
+## 5. Protokol Keamanan Kredensial (Zero-Touch Policy)
 
-Keunggulan arsitektur GaskenLE adalah integrasi event kernel Linux:
-* Ketika AI Agent (atau Antigravity) menulis, mengedit, atau menghapus file di filesystem proyek, kernel Linux langsung memicu sinyal `inotify`.
-* File manager **Yazi** di Panel Kanan Atas mendengarkan sinyal ini secara native dan memperbarui tampilan pohon berkas secara instan tanpa perlu refresh manual.
-* Developer dapat langsung meninjau perubahannya di Panel Kanan Bawah menggunakan `git diff` atau `git status`.
-
----
-
-## 5. Protokol Keamanan & Aturan Operasional Agen
-
-Untuk menjaga kestabilan sistem operasi dan kerahasiaan data pengguna, setiap AI Agent yang beroperasi pada sistem ini terikat oleh **GaskenLE Security Protocol**:
-
-### ATURAN 1: Privasi File `.env` & Kredensial (Zero-Touch Policy)
-1. **Dilarang Membaca/Mengubah File `.env`:** AI Agent dilarang keras membuka, membaca, menampilkan, atau memodifikasi file `.env` maupun berkas kredensial apa pun.
-2. **Kendali Penuh di Tangan Pengguna:** Seluruh token API, kredensial Git, dan secret keys wajib diisi atau dipaste secara manual oleh pengguna.
-3. AI Agent hanya diperbolehkan menyediakan berkas template contoh (seperti `.env.example`).
-
-### ATURAN 2: Larangan Modifikasi Tanpa Persetujuan (*Explicit Consent*)
-1. Agen dilarang keras membuat skrip otomatis untuk menimpa (*overwrite*), menghapus (*rm*), atau mengubah file konfigurasi sistem luar:
-   * `~/.config/yazi/*`
-   * `~/.nanorc`
-   * `~/.bashrc` / `~/.profile`
-2. Setiap kali ada rekomendasi perubahan atau penambahan fitur baru, Agen **wajib** menyajikan:
-   * **Target File:** (Lokasi path berkas lengkap)
-   * **Aksi:** (Ubah / Tambah / Hapus)
-   * **Alasan Teknis & Dampak:** (Mengapa diperlukan dan bagaimana dampaknya terhadap sistem)
-   * **Potongan Kode:** Diff atau blok kode yang akan diterapkan.
-
-### ATURAN 3: Pola Verifikasi Manual (*Human-in-the-Loop*)
-1. Agen dilarang menjalankan inspeksi filesystem secara liar di luar direktori proyek.
-2. Jika Agen membutuhkan log atau isi berkas konfigurasi sistem tertentu, Agen wajib meminta konfirmasi transparan kepada pengguna.
-
-### ATURAN 4: Prinsip Ekstensi Berkelanjutan
-1. **Pertahankan Latensi 0 ms:** Fitur baru tidak boleh menambahkan layer shell wrapper yang lambat. Gunakan native executable C/Rust atau placeholder `%s`.
-2. **Isolasi Konfigurasi:** Skrip workspace dirancang mandiri agar tidak mengotori environment global sistem operasi.
+* File `.env` bersifat **RAHASIA & PRIVAT**. AI Agent tidak memiliki hak untuk membaca, mencetak, atau menimpa isi file `.env`.
+* Pengguna mengisi atau menempelkan (*paste*) API key secara mandiri di `.env`.
+* Folder data, log, dan token sesi otomatis diabaikan oleh `.gitignore` sehingga aman dari risiko *unintentional commit*.

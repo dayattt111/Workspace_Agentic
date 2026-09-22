@@ -1,0 +1,10 @@
+{
+  "name": "gasken-9router-template",
+  "version": "1.0.0",
+  "description": "Ready-to-run 9router gateway template for GaskenLE",
+  "scripts": {
+    "start": "9router -p 20128 -H 0.0.0.0 -l",
+    "gateway": "9router -p 20128 -H 0.0.0.0 -n --skip-update",
+    "install:cli": "bun add -g 9router 2>/dev/null || npm install -g 9router"
+  }
+}

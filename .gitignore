@@ -12,6 +12,12 @@ gasken_debug.log*
 # Node / Bun artifacts
 node_modules/
 .bun/
+9router/node_modules/
+
+# Agent local data & storage
+hermes/data/
+hermes/workspace/
+9router/data/
 
 # OS & Editor Files
 .DS_Store
