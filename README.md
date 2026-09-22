@@ -11,7 +11,8 @@
 
 - **Hemat Memori Ekstrem:** Memangkas konsumsi RAM dari standar IDE berat (~1–2 GB) menjadi baseline hanya **35–50 MB**.
 - **Orkestrasi Sekali Perintah:** Cukup jalankan perintah `gasken` dari direktori proyek mana pun, layout 3 panel otomatis dibuat presisi sesuai ukuran jendela terminal.
-- **Akses Berkas 0 ms:** Menggunakan placeholder native `%s` di Yazi untuk membuka berkas teks di Nano dan gambar di EOG tanpa delay proses desktop.
+- **Floating Modal Terminal Editor (0 ms):** Menekan `Alt + o` pada Yazi memunculkan popup modal Nano yang luas (`88% lebar x 85% tinggi`) mengambang di tengah layar secara instan, dan otomatis tertutup kembali saat selesai.
+- **Akses Berkas Instan:** Membuka berkas kode di modal Nano dan gambar di EOG secara native tanpa delay proses desktop.
 - **Navigasi Bebas Hambatan:** Pindah antar-panel instan dengan `Ctrl + Spasi`, `Shift + Tab`, atau `F2` tanpa prefix tmux.
 - **Integrasi Event Kernel (inotify):** Setiap berkas yang dibuat/diubah oleh AI Agent langsung terdeteksi otomatis oleh file manager Yazi.
 
@@ -28,7 +29,7 @@
 | |                             |                                     | |
 | | [AI AGENT PANE]             | [FILE MANAGER: YAZI]                | |
 | | Wadah interaksi AI / Hermes | Navigasi direktori & inotify        | |
-| |                             | Alt + o: Buka Nano / EOG            | |
+| |                             | Alt + o: Floating Modal Nano / EOG  | |
 | |                             +-------------------------------------+ |
 | |                             | Panel Kanan Bawah (35% Tinggi)      | |
 | |                             |                                     | |
@@ -49,7 +50,16 @@ Pastikan skrip utama executable:
 chmod +x /home/hikaruu/gasken_workspace/bin/* /home/hikaruu/gasken_workspace/panes/*.sh
 ```
 
-### 2. Registrasi Perintah Global
+### 2. Salin Konfigurasi Siap Pakai (Turnkey Setup)
+Salin seluruh template konfigurasi yang telah dioptimasi ke sistem:
+```bash
+mkdir -p ~/.config/yazi
+cp /home/hikaruu/gasken_workspace/config/yazi.toml ~/.config/yazi/yazi.toml
+cp /home/hikaruu/gasken_workspace/config/keymap.toml ~/.config/yazi/keymap.toml
+cp /home/hikaruu/gasken_workspace/config/nanorc ~/.nanorc
+```
+
+### 3. Registrasi Perintah Global
 Tambahkan alias ke `~/.bashrc`:
 ```bash
 echo 'alias gasken="/home/hikaruu/gasken_workspace/bin/gasken.sh"' >> ~/.bashrc
@@ -57,7 +67,7 @@ echo 'alias gaskenle="/home/hikaruu/gasken_workspace/bin/gasken.sh"' >> ~/.bashr
 source ~/.bashrc
 ```
 
-### 3. Menjalankan Workspace
+### 4. Menjalankan Workspace
 ```bash
 cd ~/path/ke/proyek-anda
 gasken

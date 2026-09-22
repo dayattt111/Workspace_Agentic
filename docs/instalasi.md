@@ -69,15 +69,31 @@ chmod +x /home/hikaruu/gasken_workspace/bin/* /home/hikaruu/gasken_workspace/pan
 
 ---
 
-## 4. Konfigurasi Global Aplikasi Terkait
+---
 
-### A. Konfigurasi Yazi (`~/.config/yazi/yazi.toml`)
-Pastikan aturan *opener* dikonfigurasi untuk memetakan teks ke Nano secara *blocking* dan gambar ke EOG secara *orphan*:
+## 4. Konfigurasi Aplikasi Siap Pakai (Turnkey Setup)
+
+Seluruh template konfigurasi yang sudah diuji dan dioptimasi telah tersedia di direktori `config/`. Anda cukup menyalinnya dengan satu blok perintah:
+
+```bash
+# 1. Pastikan folder konfigurasi tujuan tersedia
+mkdir -p ~/.config/yazi
+
+# 2. Salin template konfigurasi siap pakai
+cp /home/hikaruu/gasken_workspace/config/yazi.toml ~/.config/yazi/yazi.toml
+cp /home/hikaruu/gasken_workspace/config/keymap.toml ~/.config/yazi/keymap.toml
+cp /home/hikaruu/gasken_workspace/config/nanorc ~/.nanorc
+```
+
+### Rincian Isi File Template:
+
+#### A. Yazi Opener (`~/.config/yazi/yazi.toml`)
+Menggunakan `orphan = true` agar popup modal terminal Nano terbuka seketika dalam 0 ms:
 
 ```toml
 [opener]
 edit = [
-  { run = '/home/hikaruu/gasken_workspace/bin/edit-modal %s', orphan = true, desc = "Edit Nano (Modal Popup)" }
+  { run = '/home/hikaruu/gasken_workspace/bin/edit-modal %s', orphan = true, desc = "Edit Nano (Floating Modal)" }
 ]
 image = [
   { run = 'eog %s', orphan = true, desc = "Lihat Gambar (EOG)" }
@@ -93,20 +109,20 @@ rules = [
 ]
 ```
 
-### B. Konfigurasi Pintasan Tombol Yazi (`~/.config/yazi/keymap.toml`)
-Tambahkan aturan tombol agar `Alt + o` memanggil opener:
+#### B. Yazi Keybindings (`~/.config/yazi/keymap.toml`)
+Mengatur pintasan `Alt + o` untuk memanggil modal terminal:
 
 ```toml
 [manager]
 prepend_keymap = [
-  { on = [ "<A-o>" ], run = "open", desc = "Buka berkas langsung" },
+  { on = [ "<A-o>" ], run = "open", desc = "Buka berkas langsung (Modal Nano / EOG)" },
   { on = [ "<A-d>" ], run = "remove", desc = "Hapus berkas" },
   { on = [ "<A-i>" ], run = "size", desc = "Hitung ukuran direktori" }
 ]
 ```
 
-### C. Konfigurasi Nano Editor (`~/.nanorc`)
-Agar Nano nyaman untuk quick code-review, tambahkan baris ini ke berkas `~/.nanorc`:
+#### C. Pengaturan Visual Nano (`~/.nanorc`)
+Mengaktifkan nomor baris, tab size 2 spasi, dan scrolling kursor mouse:
 
 ```nanorc
 set linenumbers
@@ -116,6 +132,7 @@ set tabstospaces
 set mouse
 set softwrap
 set constantshow
+set trimblanks
 ```
 
 ---

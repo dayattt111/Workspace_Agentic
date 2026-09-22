@@ -35,9 +35,8 @@ Setelah perintah `gasken` dieksekusi, layar akan terbagi menjadi tiga area fungs
 ### B. Panel 1: File Manager Yazi (Kanan Atas - 60% Lebar Layar)
 * **Peran:** Eksplorasi struktur proyek dan pembuka berkas instan.
 * **Fitur Utama:**
-  * Didukung oleh kernel Linux `inotify`: Setiap kali AI Agent atau editor membuat/mengubah file, daftar direktori di Yazi akan langsung ter-update secara *real-time*.
-  * Sorot file dan tekan `Alt + o` untuk membuka kode di editor Nano secara instan.
-  * Sorot file gambar (`.png`, `.jpg`, `.svg`) dan tekan `Alt + o` untuk membuka viewer grafis EOG di latar belakang tanpa mengunci terminal.
+  * **Buka File Teks/Kode (`Alt + o`):** Memunculkan **Floating Modal Terminal Editor** Nano berdimensi luas (`88% lebar x 85% tinggi`) mengambang di tengah layar dalam 0 ms. Anda memiliki ruang baca yang sangat lebar. Simpan dengan `Ctrl + o`, dan keluar dengan `Ctrl + x`. Modal akan otomatis tertutup dan kursor kembali seketika ke Yazi.
+  * **Buka Gambar (`Alt + o`):** Membuka viewer grafis native EOG di latar belakang (`orphan = true`) secara independen tanpa memblokir navigasi file manager.
 
 ### C. Panel 2: Git & Execution Shell (Kanan Bawah - 35% Tinggi)
 * **Peran:** Pusat kontrol terminal, kompilasi, pengujian, dan manajemen versi Git.

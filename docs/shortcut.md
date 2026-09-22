@@ -35,7 +35,7 @@ Pintasan berikut berlaku ketika kursor aktif berada di dalam Panel Yazi:
 
 | Pintasan | Fungsi | Deskripsi Teknis |
 | :--- | :--- | :--- |
-| `Alt + o` | **Buka File / Gambar** | Membuka kode via Nano atau gambar via EOG |
+| `Alt + o` | **Buka File / Gambar** | Membuka Floating Modal Nano (Teks) atau EOG (Gambar) |
 | `Enter` / `l` / `Panah Kanan` | Masuk ke direktori / Buka berkas | Navigasi hirarki folder ke dalam |
 | `h` / `Panah Kiri` | Kembali ke direktori induk (Parent) | Navigasi hirarki folder keluar |
 | `j` / `Panah Bawah` | Geser kursor ke bawah | Pindah item ke bawah |
