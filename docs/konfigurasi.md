@@ -66,22 +66,17 @@ alias bubar="tmux kill-session"
 ## 2. Konfigurasi Global Aplikasi Terkait
 
 ### A. Yazi Opener (`~/.config/yazi/yazi.toml`)
-Kunci tercapainya **latensi 0 ms** pada pembukaan file adalah penggunaan placeholder `%s` native Yazi:
+Membuka berkas teks dalam **Floating Modal Terminal** yang luas dan melebar, serta pratinjau gambar instan di latar belakang:
 
 ```toml
 [opener]
 edit = [
-  { run = 'nano %s', block = true, desc = "Edit dengan Nano" }
+  { run = '/home/hikaruu/gasken_workspace/bin/edit-modal "$1"', block = true, desc = "Edit Nano (Modal Popup)" }
 ]
 image = [
   { run = 'eog %s', orphan = true, desc = "Lihat Gambar (EOG)" }
 ]
 ```
 
-* **`block = true` pada Nano:** Menghentikan sementara interaksi Yazi sampai proses Nano selesai diedit dan ditutup (`Ctrl + x`), mencegah tumpang tindih input terminal.
+* **`edit-modal` (Popup Terminal):** Memanfaatkan fitur native `tmux display-popup` dengan ukuran luas (`88% lebar x 85% tinggi`), border melengkung (*rounded*), dan aksen warna emas. Ketika Nano selesai disimpan/ditutup (`Ctrl + x`), popup langsung lenyap dan fokus kembali seketika ke Yazi.
 * **`orphan = true` pada EOG:** Melepaskan proses viewer gambar Eye of GNOME dari process group terminal sehingga jendela gambar terbuka di latar belakang tanpa memblokir navigasi Yazi.
-
----
-
-> [!IMPORTANT]
-> Jangan gunakan skrip shell wrapper perantara untuk membuka file teks jika ingin mempertahankan latensi 0 ms. Pemanggilan langsung `nano %s` mengeksekusi binary editor tanpa overhead spawn subshell tambahan.

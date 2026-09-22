@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# ==============================================================================
+# GaskenLE - Modal Terminal Editor Opener
+# Membuka file dalam floating popup modal tmux yang luas (88% x 85%) dengan
+# border rounded, lalu otomatis kembali ke Yazi setelah Nano ditutup.
+# ==============================================================================
+
+TARGET="$1"
+[ -z "$TARGET" ] && exit 0
+
+FILENAME=$(basename "$TARGET")
+
+# Jika berada di dalam sesi tmux, luncurkan modal popup
+if [ -n "$TMUX" ]; then
+  tmux display-popup -w 88% -h 85% -b rounded \
+    -T " Edit: $FILENAME (Ctrl+O: Simpan | Ctrl+X: Keluar) " \
+    -s "bg=#111215,fg=#f4f1ea" \
+    -S "fg=#e5c158" \
+    -E "nano \"$TARGET\""
+else
+  # Fallback jika dijalankan di luar tmux
+  nano "$TARGET"
+fi

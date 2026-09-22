@@ -5,6 +5,7 @@
 
 # Logs & Debugging Files
 *.log
+logs/
 buka_debug.log
 gasken_debug.log*
 
