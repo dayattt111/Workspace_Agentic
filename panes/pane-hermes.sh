@@ -94,8 +94,11 @@ ensure_9router_daemon() {
 configure_hermes_endpoint() {
   local container="$1"
   # Set base_url dan provider hermes agar langsung tersambung ke 9router (127.0.0.1:20128)
-  docker exec "$container" /opt/hermes/bin/hermes config set model.provider main &>/dev/null || true
+  docker exec "$container" /opt/hermes/bin/hermes config set model.provider custom &>/dev/null || true
   docker exec "$container" /opt/hermes/bin/hermes config set model.base_url "http://127.0.0.1:${NINEROUTER_PORT}/v1" &>/dev/null || true
+  if [ -n "$HERMES_MODEL" ]; then
+    docker exec "$container" /opt/hermes/bin/hermes config set model.default "$HERMES_MODEL" &>/dev/null || true
+  fi
 }
 
 start_unified() {
