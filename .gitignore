@@ -1,1 +1,26 @@
+# Environment & Secrets
 .env
+.env.*
+!.env.example
+
+# Logs & Debugging Files
+*.log
+buka_debug.log
+gasken_debug.log*
+
+# Node / Bun artifacts
+node_modules/
+.bun/
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Temporary & Cache
+*.tmp
+*.bak

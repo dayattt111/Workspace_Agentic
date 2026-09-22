@@ -1,0 +1,11 @@
+{
+  "name": "gasken-docs",
+  "version": "1.0.0",
+  "description": "Dokumentasi resmi Gasken Workspace",
+  "scripts": {
+    "dev": "bun run server.ts",
+    "start": "bun run server.ts",
+    "serve:bun": "bun run server.ts",
+    "serve:py": "python3 -m http.server 3999"
+  }
+}

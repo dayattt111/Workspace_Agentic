@@ -1,0 +1,13 @@
+# Muat pengaturan dasar
+if [ -f /etc/bash.bashrc ]; then
+  source /etc/bash.bashrc
+fi
+
+# Tampilan prompt minimalis khusus workspace
+PS1='\[\e[1;32m\]\u@workspace\[\e[m\]:\[\e[1;34m\]\w\[\e[m\]\$ '
+
+# Perintah sekali ketik untuk menutup seluruh panel/sesi workspace ini
+alias tutup="tmux kill-session"
+alias bubar="tmux kill-session"
+export PATH="/home/hikaruu/gasken_workspace:$PATH"
+alias buka="/home/hikaruu/gasken_workspace/buka"

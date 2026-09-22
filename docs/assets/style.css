@@ -1,0 +1,9 @@
+/* ==========================================================================
+   STYLE.CSS - Berkas CSS Utama (Master Entrypoint)
+   Semua modul styling dipecah agar mudah dikonfigurasi dan bersih.
+   ========================================================================== */
+
+@import "./css/variables.css";
+@import "./css/sidebar.css";
+@import "./css/content.css";
+@import "./css/code.css";

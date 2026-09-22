@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+TARGET="$1"
+
+# Jika argumen kosong (karena file cuma disorot kursor tanpa diseleksi),
+# ambil path file yang sedang disorot kursor langsung via IPC Yazi
+if [ -z "$TARGET" ]; then
+  TARGET=$(ya emit-to "$YAZI_ID" 2>/dev/null)
+fi
+
+# Fallback: jika masih kosong, ambil file terakhir yang aktif di folder
+if [ -z "$TARGET" ] || [ ! -e "$TARGET" ]; then
+  # Coba baca file dari argumen kedua jika ada
+  [ -n "$2" ] && TARGET="$2"
+fi
+
+[ -z "$TARGET" ] && exit 0
+
+case "$TARGET" in
+  *.png|*.jpg|*.jpeg|*.webp|*.svg|*.gif|*.bmp|*.PNG|*.JPG|*.JPEG)
+    nohup eog "$TARGET" >/dev/null 2>&1 &
+    ;;
+  *)
+    exec micro "$TARGET"
+    ;;
+esac

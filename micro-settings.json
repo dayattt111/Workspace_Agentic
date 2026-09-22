@@ -1,0 +1,12 @@
+{
+  "clipboard": "internal",
+  "autosu": false,
+  "diff": false,
+  "fastdirty": true,
+  "keymenu": false,
+  "linter": false,
+  "mouse": true,
+  "savecursor": false,
+  "saveundo": false,
+  "syntax": true
+}
