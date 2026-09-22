@@ -25,5 +25,6 @@ const server = Bun.serve({
   },
 });
 
-console.log(`\n⚡ Gaskenle Docs aktif(Made By Hikaruu(Muhammad Amin Hidayat)) di: http://localhost:${server.port}`);
+console.log(`\n Made By Hikaruu(Muhammad Amin Hidayat) \n`);
+console.log(`\n⚡ Gaskenle Docs aktif di: http://localhost:${server.port}`);
 console.log(`Tekan Ctrl + C untuk mematikan server.\n`);

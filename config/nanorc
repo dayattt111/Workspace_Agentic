@@ -1,0 +1,13 @@
+# ==============================================================================
+# GaskenLE - Konfigurasi Siap Pakai Editor Nano
+# Salin ke: ~/.nanorc
+# ==============================================================================
+
+set linenumbers
+set autoindent
+set tabsize 2
+set tabstospaces
+set mouse
+set softwrap
+set constantshow
+set trimblanks

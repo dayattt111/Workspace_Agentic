@@ -1,0 +1,11 @@
+# ==============================================================================
+# GaskenLE - Konfigurasi Siap Pakai Pintasan Tombol Yazi
+# Salin ke: ~/.config/yazi/keymap.toml
+# ==============================================================================
+
+[manager]
+prepend_keymap = [
+  { on = [ "<A-o>" ], run = "open", desc = "Buka berkas langsung (Modal Nano / EOG)" },
+  { on = [ "<A-d>" ], run = "remove", desc = "Hapus berkas" },
+  { on = [ "<A-i>" ], run = "size", desc = "Hitung ukuran direktori" }
+]
