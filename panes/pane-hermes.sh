@@ -122,7 +122,8 @@ _cp() {
 }
 
 show_welcome_experience() {
-  local cols; cols=$(tput cols 2>/dev/null || echo 40)
+  local cols; cols=$(tput cols 2>/dev/null || echo 44)
+  [ -z "$cols" ] || [ "$cols" -lt 20 ] && cols=44
 
   # helper: cetak teks di tengah dengan warna (printf, aman untuk backslash)
   _cl() {
@@ -158,30 +159,26 @@ show_welcome_experience() {
   # Stage 2: GaskenLE mascot + title
   clear
   echo ""
-  _cl "     -:*=:-        " "$GOLD"
-  _cl "    .**%%%#=.    :-*" "$GOLD"
-  _cl ".=*+*#@@@%%*- -*++%" "$GOLD"
-  _cl "+%@@@#+=.:+#*=..:=*" "$GOLD"
-  _cl "*%@@*-..=%#=.:+%%*+" "$GOLD"
-  _cl "+%@@*.-.-%*=.-===+=" "$GOLD"
-  _cl "-%@@@*.-%=-:--==+#%" "$GOLD"
-  _cl "=%@@@%.#*-:==-::==." "$GOLD"
-  _cl "=*#@%.*#=--*##*##=:" "$GOLD"
-  _cl " +@@*+.:#**+*%**=  " "$GOLD"
-  _cl " *@%*=.-%%#*+=++-  " "$GOLD"
-  _cl "-#@@*:.=*%%####*#  " "$GOLD"
-  _cl " =*##*#*=.:::=+-   " "$GOLD"
-  _cl "  +=*+%%%*+*+=:    " "$GOLD"
-  _cl "    -*+**+**=:     " "$GOLD"
+  _cl "     .*****:..        " "$GOLD"
+  _cl " :*###%%%%#*:*#*::.   " "$GOLD"
+  _cl ".#%%%%%###*:***###**#:" "$GOLD"
+  _cl ".*#%%*::#*:::***#***: " "$GOLD"
+  _cl "*##%%#.*#..*.*:.#:    " "$GOLD"
+  _cl "##%%%@# #:.*:.:#*::.  " "$GOLD"
+  _cl "*#%%#***::******::    " "$GOLD"
+  _cl ".*%#:.##*#***:::.     " "$GOLD"
+  _cl ":#%%%#*:*:*#*::***:.  " "$GOLD"
+  _cl " **##%##:::*::.       " "$GOLD"
+  _cl "  :#####*:.           " "$GOLD"
   echo ""
-  _cl "══════════════════════════════════" "$GOLD"
+  _cl "════════════════════════════════" "$GOLD"
   echo ""
   _cl "░█▀▀░█▀█░█▀▀░█░█░█▀▀░█▀█░█░░░█▀▀" "$GOLD"
   _cl "░█░█░█▀█░▀▀█░█▀▄░█▀▀░█░█░█░░░█▀▀" "$GOLD"
   _cl "░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀" "$GOLD"
   echo ""
   _cl "Workspace By hikaruu" "$BONE"
-  _cl "══════════════════════════════════" "$GOLD"
+  _cl "════════════════════════════════" "$GOLD"
 }
 
 # Flag untuk mencegah double-cleanup
