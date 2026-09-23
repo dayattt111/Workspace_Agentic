@@ -122,54 +122,66 @@ _cp() {
 }
 
 show_welcome_experience() {
-  # ── Stage 1: Hermes Agent Intro (thin ASCII, centered) ──
+  local cols; cols=$(tput cols 2>/dev/null || echo 40)
+
+  # helper: cetak teks di tengah dengan warna (printf, aman untuk backslash)
+  _cl() {
+    local text="$1" color="${2:-}"
+    local len="${#text}"
+    local pad=$(( (cols - len) / 2 ))
+    [ "$pad" -lt 0 ] && pad=0
+    printf "%${pad}s" ""
+    printf "%b%s%b\n" "$color" "$text" "$RESET"
+  }
+
+  # Stage 1: Hermes Agent Intro
   clear
   echo ""
-  _cp " _   _  ___  ____  __  __  ___  ___ " "$CYAN"
-  _cp "| | | || __||  _ \|  \/  || __|/ __|" "$CYAN"
-  _cp "| |_| || _|  | |_) | |\/| || _| \__ \\" "$CYAN"
-  _cp " \___/ |___| |____/|_|  |_||___||___/" "$CYAN"
   echo ""
-  _cp "~ A G E N T   C L I ~" "$BONE"
-  _cp "Autonomous Pair Programmer" "$GRAY"
+  _cl "╔══════════════════════════════╗" "$CYAN"
+  _cl "║                              ║" "$CYAN"
+  _cl "║   H E R M E S   A G E N T   ║" "$BONE"
+  _cl "║          C L I               ║" "$CYAN"
+  _cl "║                              ║" "$CYAN"
+  _cl "╚══════════════════════════════╝" "$CYAN"
   echo ""
-  _cp "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500" "$CYAN"
-  _cp "Nous Research \u00b7 Agentic Framework" "$GRAY"
+  _cl "Autonomous Pair Programmer" "$GRAY"
+  _cl "Nous Research · Agentic AI" "$GRAY"
   echo ""
-  _cp "[ Memuat runtime...    3s ]" "$GRAY"
+  _cl "[ Memuat runtime...    3s ]" "$GRAY"
   sleep 1
-  _cp "[ Memeriksa gateway... 2s ]" "$GRAY"
+  _cl "[ Memeriksa gateway... 2s ]" "$GRAY"
   sleep 1
-  _cp "[ Konek ke sandbox...  1s ]" "$GRAY"
+  _cl "[ Konek ke sandbox...  1s ]" "$GRAY"
   sleep 1
 
-  # ── Stage 2: GaskenLE mascot + title (compact, centered) ──
+  # Stage 2: GaskenLE mascot + title
   clear
   echo ""
-  _cp "       -:*=:-         " "$GOLD"
-  _cp "      .**%%%#=.     :-*" "$GOLD"
-  _cp "  .=*+*#@@@%%*-  -*++%" "$GOLD"
-  _cp "  +%@@@#+=.:+#*=..:=*#" "$GOLD"
-  _cp "  *%@@*-..=%#=.:+%%*+#" "$GOLD"
-  _cp "  +%@@*.-.-%*=.-===+=." "$GOLD"
-  _cp "  -%@@@*.-%=-:--==+#%." "$GOLD"
-  _cp "  =%@@@%.#*-:==-::==. " "$GOLD"
-  _cp "  =*#@%.*#=--*##*##=: " "$GOLD"
-  _cp "   +@@*+.:#**+*%**=   " "$GOLD"
-  _cp "   *@%*=.-%%#*+=++-   " "$GOLD"
-  _cp "  -#@@*:.=*%%####*#   " "$GOLD"
-  _cp "   =*##*#*=.:::=+-    " "$GOLD"
-  _cp "    +=*+%%%*+*+=:     " "$GOLD"
-  _cp "      -*+**+**=:      " "$GOLD"
+  _cl "     -:*=:-        " "$GOLD"
+  _cl "    .**%%%#=.    :-*" "$GOLD"
+  _cl ".=*+*#@@@%%*- -*++%" "$GOLD"
+  _cl "+%@@@#+=.:+#*=..:=*" "$GOLD"
+  _cl "*%@@*-..=%#=.:+%%*+" "$GOLD"
+  _cl "+%@@*.-.-%*=.-===+=" "$GOLD"
+  _cl "-%@@@*.-%=-:--==+#%" "$GOLD"
+  _cl "=%@@@%.#*-:==-::==." "$GOLD"
+  _cl "=*#@%.*#=--*##*##=:" "$GOLD"
+  _cl " +@@*+.:#**+*%**=  " "$GOLD"
+  _cl " *@%*=.-%%#*+=++-  " "$GOLD"
+  _cl "-#@@*:.=*%%####*#  " "$GOLD"
+  _cl " =*##*#*=.:::=+-   " "$GOLD"
+  _cl "  +=*+%%%*+*+=:    " "$GOLD"
+  _cl "    -*+**+**=:     " "$GOLD"
   echo ""
-  _cp "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" "$GOLD"
-  _cp " ___         _          _     ___ " "$GOLD"
-  _cp "/ __|__ _ __| |_____ _ | |   | __|" "$GOLD"
-  _cp "\| (_ / _. |_-< / / -_) | |__| _| " "$GOLD"
-  _cp " \___|\_,_/__/_\_\___|_||____|___|" "$GOLD"
+  _cl "══════════════════════════════════" "$GOLD"
   echo ""
-  _cp "Workspace By hikaruu" "$BONE"
-  _cp "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" "$GOLD"
+  _cl "░█▀▀░█▀█░█▀▀░█░█░█▀▀░█▀█░█░░░█▀▀" "$GOLD"
+  _cl "░█░█░█▀█░▀▀█░█▀▄░█▀▀░█░█░█░░░█▀▀" "$GOLD"
+  _cl "░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀" "$GOLD"
+  echo ""
+  _cl "Workspace By hikaruu" "$BONE"
+  _cl "══════════════════════════════════" "$GOLD"
 }
 
 # Flag untuk mencegah double-cleanup
