@@ -111,21 +111,27 @@ configure_hermes_endpoint() {
 }
 
 show_welcome_experience() {
-  # 1. Official ASCII Logo Hermes Agent (Tampil selama 3 detik)
+  # ── Stage 1: Custom Hermes Agent Intro Banner (3 detik) ──
   clear
   echo -e "${CYAN}"
   cat << 'EOF'
-                ☤  N O U S  ☤
-     _  _ ___ ___ __  __ ___ ___ 
-    | || | __| _ \  \/  | __/ __|
-    | __ | _||   / |\/| | _|\__ \
-    |_||_|___|_|_\_|  |_|___|___/
-         A G E N T   C L I
+
+    ┌─────────────────────────────────────────┐
+    │                                         │
+    │   ██╗  ██╗███████╗██████╗ ███╗   ███╗  │
+    │   ██║  ██║██╔════╝██╔══██╗████╗ ████║  │
+    │   ███████║█████╗  ██████╔╝██╔████╔██║  │
+    │   ██╔══██║██╔══╝  ██╔══██╗██║╚██╔╝██║  │
+    │   ██║  ██║███████╗██║  ██║██║ ╚═╝ ██║  │
+    │   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  │
+    │             A G E N T  C L I            │
+    │       Autonomous Pair Programmer        │
+    └─────────────────────────────────────────┘
+
 EOF
   echo -e "${RESET}"
-  echo -e "${BONE}       Autonomous Pair Programmer${RESET}"
-  echo -e "${GRAY}      Nous Research Framework v0.21.4${RESET}"
-  echo -e "${GOLD}===============================================${RESET}"
+  echo -e "${GRAY}           Nous Research · Agentic Framework${RESET}"
+  echo -e "${CYAN}─────────────────────────────────────────────${RESET}"
   echo -e "${GRAY}   [ Memuat runtime ekosistem... 3s ]${RESET}"
   sleep 1
   echo -e "${GRAY}   [ Memeriksa gateway & sandbox... 2s ]${RESET}"
@@ -133,7 +139,7 @@ EOF
   echo -e "${GRAY}   [ Menghubungkan ke ruang kerja... 1s ]${RESET}"
   sleep 1
 
-  # 2. GaskenLE Mascot Logo (Digeser ke kanan agar simetris & tidak mentok ke kiri)
+  # ── Stage 2: GaskenLE Mascot + Bold Block Title ──
   clear
   echo -e "${GOLD}"
   cat << 'EOF'
@@ -157,22 +163,45 @@ EOF
 EOF
   echo -e "${RESET}"
   echo -e "${GOLD}"
+  # Bold block-style ASCII untuk "GaskenLE" agar tegap & mudah dibaca
   cat << 'EOF'
-         ___           _              _     ___ 
-        / __|__ _  ___| |_____ _ _   | |   | __|
-       | (_ / _` |(_-< / / -_) ' \  | |__ | _| 
-        \___\__,_|/__/_\_\___|_||_|  |____||___|
+
+  ██████╗  █████╗ ███████╗██╗  ██╗███████╗███╗   ██╗██╗     ███████╗
+ ██╔════╝ ██╔══██╗██╔════╝██║ ██╔╝██╔════╝████╗  ██║██║     ██╔════╝
+ ██║  ███╗███████║███████╗█████╔╝ █████╗  ██╔██╗ ██║██║     █████╗  
+ ██║   ██║██╔══██║╚════██║██╔═██╗ ██╔══╝  ██║╚██╗██║██║     ██╔══╝  
+ ╚██████╔╝██║  ██║███████║██║  ██╗███████╗██║ ╚████║███████╗███████╗
+  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝
+
 EOF
   echo -e "${RESET}"
   echo -e "${BONE}               Workspace By hikaruu${RESET}"
-  echo -e "${GOLD}===============================================${RESET}"
+  echo -e "${GOLD}═══════════════════════════════════════════════${RESET}"
+}
+
+# Flag untuk mencegah double-cleanup
+_NINEROUTER_STARTED_BY_US=0
+
+_cleanup_9router() {
+  if [ "$_NINEROUTER_STARTED_BY_US" -eq 1 ]; then
+    echo -e "\n${YELLOW}[GaskenLE]${RESET} Menghentikan 9router Gateway yang dijalankan sesi ini..."
+    pkill -f "9router" 2>/dev/null || true
+    _NINEROUTER_STARTED_BY_US=0
+  fi
 }
 
 start_unified() {
   show_welcome_experience
 
-  # 1. Pastikan 9router Gateway menyala
-  ensure_9router_daemon
+  # 1. Pastikan 9router Gateway menyala — lacak bila kita yang nyalain
+  if ! is_9router_running; then
+    ensure_9router_daemon && _NINEROUTER_STARTED_BY_US=1
+  else
+    echo -e "${GREEN}✓ 9router Gateway aktif di port :${NINEROUTER_PORT}${RESET}"
+  fi
+
+  # Pasang trap: matikan 9router saat sesi ditutup (EXIT / Ctrl+C / kill)
+  trap '_cleanup_9router' EXIT INT TERM
 
   # 2. Cek Docker
   if ! command -v docker &>/dev/null; then
@@ -229,18 +258,20 @@ start_unified() {
 hermes_post_session_menu() {
   local container="$1"
   while true; do
-    echo -e "\n${GOLD}===============================================${RESET}"
-    echo -e "${BONE}          ⚙️  MANAJEMEN AI AGENT & ROUTER       ${RESET}"
-    echo -e "${GOLD}===============================================${RESET}"
+    echo -e "\n${GOLD}═══════════════════════════════════════════════${RESET}"
+    echo -e "${BONE}       ⚙  MANAJEMEN AI AGENT & ROUTER          ${RESET}"
+    echo -e "${GOLD}═══════════════════════════════════════════════${RESET}"
     echo -e "  ${GOLD}1)${RESET} ${BONE}Masuk Kembali ke Prompt Hermes${RESET} ${GREEN}(Chat Agent)${RESET}"
     echo -e "  ${GOLD}2)${RESET} ${BONE}Mode TUI Modern Hermes${RESET} ${GRAY}(hermes --tui)${RESET}"
     echo -e "  ${GOLD}3)${RESET} ${BONE}Pilih / Ganti Model Hermes${RESET} ${GRAY}(hermes model)${RESET}"
     echo -e "  ${GOLD}4)${RESET} ${BONE}Setup Wizard Hermes${RESET} ${GRAY}(hermes setup)${RESET}"
-    echo -e "  ${GOLD}5)${RESET} ${CYAN}Kelola 9router Gateway${RESET} ${GRAY}(Buka Web UI / Log)${RESET}"
-    echo -e "  ${GOLD}6)${RESET} ${YELLOW}Terminal Shell Container${RESET} ${GRAY}(docker exec bash)${RESET}"
-    echo -e "  ${GOLD}7)${RESET} ${BONE}Terminal Shell Biasa${RESET} ${GRAY}(Bash Workspace)${RESET}"
+    echo -e "  ${GOLD}5)${RESET} ${CYAN}Konfigurasi Hermes${RESET} ${GRAY}(MCP, Integrasi, Tools)${RESET}"
+    echo -e "  ${GOLD}6)${RESET} ${CYAN}Kelola 9router Gateway${RESET} ${GRAY}(Web UI / Log / Restart)${RESET}"
+    echo -e "  ${GOLD}7)${RESET} ${YELLOW}Terminal Shell Container${RESET} ${GRAY}(docker exec bash)${RESET}"
+    echo -e "  ${GOLD}8)${RESET} ${BONE}Terminal Shell Biasa${RESET} ${GRAY}(Bash Workspace)${RESET}"
+    echo -e "  ${GOLD}0)${RESET} ${RED}Keluar & Matikan 9router${RESET}"
     echo ""
-    read -r -p "Pilihan [1-7] (Default 1): " sub_opt
+    read -r -p "Pilihan [0-8] (Default 1): " sub_opt
     case "$sub_opt" in
       2)
         docker exec -it -w /workspace "$container" /opt/hermes/bin/hermes --tui
@@ -252,20 +283,185 @@ hermes_post_session_menu() {
         docker exec -it -w /workspace "$container" /opt/hermes/bin/hermes setup
         ;;
       5)
-        manage_9router_menu
+        hermes_config_menu "$container"
         ;;
       6)
-        docker exec -it -w /workspace "$container" bash || docker exec -it "$container" sh
+        manage_9router_menu
         ;;
       7)
+        docker exec -it -w /workspace "$container" bash || docker exec -it "$container" sh
+        ;;
+      8)
         start_shell
         return
+        ;;
+      0)
+        echo -e "${YELLOW}[GaskenLE]${RESET} Mengakhiri sesi..."
+        _cleanup_9router
+        exit 0
         ;;
       *)
         docker exec -it -w /workspace "$container" /opt/hermes/bin/hermes
         ;;
     esac
   done
+}
+
+# ── Sprint 2: Hermes Configuration Menu (MCP, Integrations, Tools) ──
+hermes_config_menu() {
+  local container="$1"
+  while true; do
+    echo -e "\n${GOLD}═══════════════════════════════════════════════${RESET}"
+    echo -e "${BONE}        🔧 KONFIGURASI HERMES AGENT             ${RESET}"
+    echo -e "${GOLD}═══════════════════════════════════════════════${RESET}"
+    echo -e "  ${GOLD}1)${RESET} ${BONE}Manajemen MCP Servers${RESET} ${GRAY}(tambah/hapus/lihat MCP)${RESET}"
+    echo -e "  ${GOLD}2)${RESET} ${CYAN}Integrasi Discord Bot${RESET} ${GRAY}(token & channel ID)${RESET}"
+    echo -e "  ${GOLD}3)${RESET} ${CYAN}Integrasi Telegram Bot${RESET} ${GRAY}(bot token & chat ID)${RESET}"
+    echo -e "  ${GOLD}4)${RESET} ${BONE}Integrasi Notion${RESET} ${GRAY}(API key & workspace)${RESET}"
+    echo -e "  ${GOLD}5)${RESET} ${YELLOW}Lihat Konfigurasi Aktif${RESET} ${GRAY}(hermes config list)${RESET}"
+    echo -e "  ${GOLD}6)${RESET} ${RED}Reset Konfigurasi Hermes${RESET} ${GRAY}(hermes config reset)${RESET}"
+    echo -e "  ${GOLD}0)${RESET} ${GRAY}Kembali ke Menu Utama${RESET}"
+    echo ""
+    read -r -p "Pilihan [0-6]: " cfg_opt
+    case "$cfg_opt" in
+      1) hermes_mcp_menu "$container" ;;
+      2) hermes_discord_setup "$container" ;;
+      3) hermes_telegram_setup "$container" ;;
+      4) hermes_notion_setup "$container" ;;
+      5)
+        echo -e "\n${CYAN}--- Konfigurasi Hermes Aktif ---${RESET}"
+        docker exec -it "$container" /opt/hermes/bin/hermes config list 2>/dev/null || \
+          docker exec -it "$container" /opt/hermes/bin/hermes config show 2>/dev/null || \
+          echo -e "${GRAY}(Gunakan: docker exec $container hermes config list)${RESET}"
+        ;;
+      6)
+        echo -e "${RED}⚠ Ini akan menghapus seluruh config Hermes di container!${RESET}"
+        read -r -p "Yakin? (yes/N): " confirm_reset
+        if [ "$confirm_reset" = "yes" ]; then
+          docker exec "$container" /opt/hermes/bin/hermes config reset 2>/dev/null || true
+          echo -e "${GREEN}✓ Konfigurasi berhasil direset.${RESET}"
+        fi
+        ;;
+      0) return ;;
+      *) echo -e "${GRAY}Pilihan tidak valid.${RESET}" ;;
+    esac
+  done
+}
+
+hermes_mcp_menu() {
+  local container="$1"
+  while true; do
+    echo -e "\n${GOLD}--- MCP SERVER MANAGER ---${RESET}"
+    echo -e "  ${GOLD}1)${RESET} Lihat MCP Servers aktif"
+    echo -e "  ${GOLD}2)${RESET} Tambah MCP Server (URL)"
+    echo -e "  ${GOLD}3)${RESET} Tambah MCP Server via NPX package"
+    echo -e "  ${GOLD}4)${RESET} Hapus MCP Server"
+    echo -e "  ${GOLD}5)${RESET} Shell interaktif di container (kelola manual)"
+    echo -e "  ${GOLD}0)${RESET} Kembali"
+    echo ""
+    read -r -p "Pilihan [0-5]: " mcp_opt
+    case "$mcp_opt" in
+      1)
+        echo -e "${CYAN}MCP Servers:${RESET}"
+        docker exec "$container" /opt/hermes/bin/hermes mcp list 2>/dev/null || \
+          docker exec "$container" cat /root/.hermes/mcp.json 2>/dev/null || \
+          echo -e "${GRAY}(Tidak ada MCP server terdaftar atau perintah tidak tersedia)${RESET}"
+        ;;
+      2)
+        read -r -p "Nama server MCP: " mcp_name
+        read -r -p "URL endpoint MCP (contoh: http://localhost:3001/sse): " mcp_url
+        if [ -n "$mcp_name" ] && [ -n "$mcp_url" ]; then
+          docker exec "$container" /opt/hermes/bin/hermes mcp add "$mcp_name" "$mcp_url" 2>/dev/null || \
+            echo -e "${YELLOW}Coba tambahkan manual ke config MCP Hermes di container.${RESET}"
+          echo -e "${GREEN}✓ MCP '$mcp_name' ditambahkan: $mcp_url${RESET}"
+        fi
+        ;;
+      3)
+        read -r -p "NPX Package MCP (contoh: @modelcontextprotocol/server-filesystem): " mcp_pkg
+        if [ -n "$mcp_pkg" ]; then
+          docker exec "$container" /opt/hermes/bin/hermes mcp add-npx "$mcp_pkg" 2>/dev/null || \
+            echo -e "${YELLOW}Pastikan npx tersedia di container atau coba instalasi manual.${RESET}"
+        fi
+        ;;
+      4)
+        read -r -p "Nama MCP Server yang dihapus: " mcp_del
+        if [ -n "$mcp_del" ]; then
+          docker exec "$container" /opt/hermes/bin/hermes mcp remove "$mcp_del" 2>/dev/null || \
+            echo -e "${YELLOW}Gagal menghapus, cek nama server yang benar.${RESET}"
+          echo -e "${GREEN}✓ MCP '$mcp_del' dihapus.${RESET}"
+        fi
+        ;;
+      5)
+        echo -e "${GRAY}Membuka shell di container untuk kelola MCP secara manual...${RESET}"
+        docker exec -it "$container" bash || docker exec -it "$container" sh
+        ;;
+      0) return ;;
+    esac
+  done
+}
+
+hermes_discord_setup() {
+  local container="$1"
+  echo -e "\n${CYAN}--- SETUP INTEGRASI DISCORD ---${RESET}"
+  echo -e "${GRAY}Hermes dapat beroperasi sebagai Discord Bot menggunakan webhook atau bot token.${RESET}"
+  echo -e "${GOLD}Referensi:${RESET} https://discord.com/developers/applications\n"
+  read -r -p "Discord Bot Token: " discord_token
+  read -r -p "Channel ID Target: " discord_channel
+  if [ -n "$discord_token" ] && [ -n "$discord_channel" ]; then
+    docker exec "$container" /opt/hermes/bin/hermes config set integrations.discord.token "$discord_token" 2>/dev/null || true
+    docker exec "$container" /opt/hermes/bin/hermes config set integrations.discord.channel_id "$discord_channel" 2>/dev/null || true
+    # Simpan juga ke .env lokal sebagai backup
+    {
+      echo "DISCORD_BOT_TOKEN=$discord_token"
+      echo "DISCORD_CHANNEL_ID=$discord_channel"
+    } >> "$WORKSPACE_DIR/.env"
+    echo -e "${GREEN}✓ Konfigurasi Discord disimpan ke container & .env lokal.${RESET}"
+  else
+    echo -e "${YELLOW}Dibatalkan (input kosong).${RESET}"
+  fi
+}
+
+hermes_telegram_setup() {
+  local container="$1"
+  echo -e "\n${CYAN}--- SETUP INTEGRASI TELEGRAM ---${RESET}"
+  echo -e "${GRAY}Buat bot via @BotFather di Telegram, dapatkan token & chat_id.${RESET}"
+  echo -e "${GOLD}Cek Chat ID:${RESET} https://api.telegram.org/bot<TOKEN>/getUpdates\n"
+  read -r -p "Telegram Bot Token: " tg_token
+  read -r -p "Chat ID Target: " tg_chat
+  if [ -n "$tg_token" ] && [ -n "$tg_chat" ]; then
+    docker exec "$container" /opt/hermes/bin/hermes config set integrations.telegram.token "$tg_token" 2>/dev/null || true
+    docker exec "$container" /opt/hermes/bin/hermes config set integrations.telegram.chat_id "$tg_chat" 2>/dev/null || true
+    {
+      echo "TELEGRAM_BOT_TOKEN=$tg_token"
+      echo "TELEGRAM_CHAT_ID=$tg_chat"
+    } >> "$WORKSPACE_DIR/.env"
+    echo -e "${GREEN}✓ Konfigurasi Telegram disimpan ke container & .env lokal.${RESET}"
+  else
+    echo -e "${YELLOW}Dibatalkan (input kosong).${RESET}"
+  fi
+}
+
+hermes_notion_setup() {
+  local container="$1"
+  echo -e "\n${CYAN}--- SETUP INTEGRASI NOTION ---${RESET}"
+  echo -e "${GRAY}Buat integration di: https://www.notion.so/my-integrations${RESET}"
+  echo -e "${GRAY}Lalu share page/database yang ingin diakses ke integration tersebut.${RESET}\n"
+  read -r -p "Notion API Key (secret_...): " notion_key
+  read -r -p "Notion Workspace/Database ID (opsional): " notion_db
+  if [ -n "$notion_key" ]; then
+    docker exec "$container" /opt/hermes/bin/hermes config set integrations.notion.api_key "$notion_key" 2>/dev/null || true
+    if [ -n "$notion_db" ]; then
+      docker exec "$container" /opt/hermes/bin/hermes config set integrations.notion.database_id "$notion_db" 2>/dev/null || true
+    fi
+    {
+      echo "NOTION_API_KEY=$notion_key"
+      [ -n "$notion_db" ] && echo "NOTION_DATABASE_ID=$notion_db"
+    } >> "$WORKSPACE_DIR/.env"
+    echo -e "${GREEN}✓ Konfigurasi Notion disimpan ke container & .env lokal.${RESET}"
+    echo -e "${GRAY}Tip: Pasang MCP server Notion agar Hermes bisa baca/tulis Notion secara agentic.${RESET}"
+  else
+    echo -e "${YELLOW}Dibatalkan (API key kosong).${RESET}"
+  fi
 }
 
 manage_9router_menu() {
