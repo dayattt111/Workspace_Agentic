@@ -6,8 +6,14 @@ fi
 # Tampilan prompt minimalis khusus workspace
 PS1='\[\e[1;32m\]\u@workspace\[\e[m\]:\[\e[1;34m\]\w\[\e[m\]\$ '
 
-# Perintah sekali ketik untuk menutup seluruh panel/sesi workspace ini
-alias tutup="tmux kill-session"
-alias bubar="tmux kill-session"
+# Perintah sekali ketik untuk menutup seluruh panel/sesi workspace ini dan mematikan 9router
+tutup() {
+  echo -e "\033[33m[GaskenLE]\033[0m Mematikan 9router Gateway & menutup sesi workspace..."
+  pkill -f "9router" 2>/dev/null || true
+  tmux kill-session
+}
+bubar() {
+  tutup
+}
 export PATH="/home/hikaruu/gasken_workspace/bin:$PATH"
 alias buka="/home/hikaruu/gasken_workspace/bin/buka"

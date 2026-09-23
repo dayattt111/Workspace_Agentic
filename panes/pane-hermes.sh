@@ -75,7 +75,7 @@ ensure_9router_daemon() {
   if command -v 9router &>/dev/null; then
     (
       cd "$NINEROUTER_DIR" 2>/dev/null || cd "$WORKSPACE_DIR"
-      nohup 9router -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n --skip-update < /dev/null > "$WORKSPACE_DIR/logs/9router.log" 2>&1 &
+      nohup 9router -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n -t --skip-update < /dev/null > "$WORKSPACE_DIR/logs/9router.log" 2>&1 &
     )
     # Tunggu beberapa detik sampai server siap
     for _ in {1..10}; do
@@ -96,18 +96,24 @@ ensure_9router_daemon() {
 
 configure_hermes_endpoint() {
   local container="$1"
-  # Set base_url dan provider hermes agar langsung tersambung ke 9router (127.0.0.1:20128)
-  docker exec "$container" /opt/hermes/bin/hermes config set model.provider custom &>/dev/null || true
-  docker exec "$container" /opt/hermes/bin/hermes config set model.base_url "http://127.0.0.1:${NINEROUTER_PORT}/v1" &>/dev/null || true
-  
-  local active_key="${NINEROUTER_API_KEY:-${OPENAI_API_KEY:-}}"
-  if [ -n "$active_key" ]; then
-    docker exec "$container" /opt/hermes/bin/hermes config set model.api_key "$active_key" &>/dev/null || true
-  fi
+  local active_key="${NINEROUTER_API_KEY:-${OPENAI_API_KEY:-9router-local}}"
+  local model_name="${HERMES_MODEL:-dev-architect-hikaruu}"
+  local port="${NINEROUTER_PORT:-20128}"
 
-  if [ -n "$HERMES_MODEL" ]; then
-    docker exec "$container" /opt/hermes/bin/hermes config set model.default "$HERMES_MODEL" &>/dev/null || true
-  fi
+  # Update konfigurasi secara instan via python di dalam container (0.2 detik vs 11 detik)
+  docker exec "$container" python3 -c "
+import yaml
+p = '/opt/data/config.yaml'
+try:
+    with open(p) as f: cfg = yaml.safe_load(f) or {}
+except Exception: cfg = {}
+cfg.setdefault('model', {})
+cfg['model']['provider'] = 'custom'
+cfg['model']['base_url'] = 'http://127.0.0.1:${port}/v1'
+cfg['model']['api_key'] = '${active_key}'
+cfg['model']['default'] = '${model_name}'
+with open(p, 'w') as f: yaml.dump(cfg, f)
+" &>/dev/null || true
 }
 
 # ── Helper: cetak teks di tengah terminal sesuai lebar aktual ──
@@ -159,26 +165,36 @@ show_welcome_experience() {
   # Stage 2: GaskenLE mascot + title
   clear
   echo ""
-  _cl "     .*****:..        " "$GOLD"
-  _cl " :*###%%%%#*:*#*::.   " "$GOLD"
-  _cl ".#%%%%%###*:***###**#:" "$GOLD"
-  _cl ".*#%%*::#*:::***#***: " "$GOLD"
-  _cl "*##%%#.*#..*.*:.#:    " "$GOLD"
-  _cl "##%%%@# #:.*:.:#*::.  " "$GOLD"
-  _cl "*#%%#***::******::    " "$GOLD"
-  _cl ".*%#:.##*#***:::.     " "$GOLD"
-  _cl ":#%%%#*:*:*#*::***:.  " "$GOLD"
-  _cl " **##%##:::*::.       " "$GOLD"
-  _cl "  :#####*:.           " "$GOLD"
+  _cl "                 @@@@@@@@                      " "$GOLD"
+  _cl "                @ #####+:@                     " "$GOLD"
+  _cl "         @@   @@-+@@@@@@.*@@               @@@ " "$GOLD"
+  _cl "       @*.-.=-:%@@@@@###%@@*-+#@       @@#: @@ " "$GOLD"
+  _cl "      #.%@@@@@@@*-+%-          .@    @@    *@  " "$GOLD"
+  _cl "     @+=@@@@@%=++       :=#@@@#=:@@#.     #@   " "$GOLD"
+  _cl "      @-*@@@=*      +@@#+=--=*#@@      =@@@@   " "$GOLD"
+  _cl "     @*=@@%=+     +@+      -%*.    :*@=- .@    " "$GOLD"
+  _cl "   @@*.@@@#      @#      #@    -@*      +@     " "$GOLD"
+  _cl "  % @@@@@%:     %+    ##.  .:.      .:%@       " "$GOLD"
+  _cl "  %.@@@@@%     -@.   *  +.  .%@@*:    @@       " "$GOLD"
+  _cl "  %.@@@@@%     #@   *. @     ... .:-#@         " "$GOLD"
+  _cl "   @* *@@*     =@-  % + .%.......#@            " "$GOLD"
+  _cl "     @.@@=:     %@-*#- .*==--%@#--             " "$GOLD"
+  _cl "      *=@%+      @@@  @@.  :%. ..-             " "$GOLD"
+  _cl "    @+.@@@*==      %@@%#%%+::-*@@@@            " "$GOLD"
+  _cl "    @+.@@@@@-+-       =@@@@@@%. @              " "$GOLD"
+  _cl "      %-+#:.*@+==-           -*%               " "$GOLD"
+  _cl "        @@#*%= =@@%**%@%#%@@*                  " "$GOLD"
+  _cl "              #=*@@@@=:=+=.                    " "$GOLD"
+  _cl "               %#######                        " "$GOLD"
   echo ""
-  _cl "════════════════════════════════" "$GOLD"
+  _cl "═══════════════════════════════════════════════" "$GOLD"
   echo ""
   _cl "░█▀▀░█▀█░█▀▀░█░█░█▀▀░█▀█░█░░░█▀▀" "$GOLD"
   _cl "░█░█░█▀█░▀▀█░█▀▄░█▀▀░█░█░█░░░█▀▀" "$GOLD"
   _cl "░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀" "$GOLD"
   echo ""
   _cl "Workspace By hikaruu" "$BONE"
-  _cl "════════════════════════════════" "$GOLD"
+  _cl "═══════════════════════════════════════════════" "$GOLD"
 }
 
 # Flag untuk mencegah double-cleanup
@@ -244,7 +260,13 @@ start_unified() {
     # Sinkronisasi endpoint koneksi Hermes ke 9router
     configure_hermes_endpoint "$RUNNING_CONTAINER"
 
-    echo -e "\n${BONE}▶ Membuka Interactive Hermes Agent... (Siap Prompt!)${RESET}"
+    echo ""
+    echo -e "${BONE}▶ Menyiapkan sesi interaktif Hermes Agent...${RESET}"
+    for i in 3 2 1; do
+      echo -ne "\r${CYAN}⏳ Menghubungkan sandbox & gateway... ${GOLD}[ ${i}s ]${RESET} "
+      sleep 1
+    done
+    echo -e "\r${GREEN}✓ Sesi siap! Membuka prompt chat Hermes Agent...       ${RESET}\n"
     echo -e "${GRAY}Tips: Ketik /exit atau Ctrl+C untuk keluar ke menu manajemen.${RESET}\n"
     
     # LANGSUNG BUKA PROMPT HERMES AGENT DI DALAM /workspace PROYEK
@@ -536,7 +558,7 @@ if ! is_9router_running; then
     (
       # WAJIB cd ke folder 9router agar config dibaca dengan benar
       cd "$NINEROUTER_DIR" 2>/dev/null || cd "$WORKSPACE_DIR"
-      nohup "$_NR_BIN" -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n --skip-update \
+      nohup "$_NR_BIN" -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n -t --skip-update \
         </dev/null >"$WORKSPACE_DIR/logs/9router.log" 2>&1 &
       disown
     )
