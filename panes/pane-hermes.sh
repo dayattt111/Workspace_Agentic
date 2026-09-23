@@ -111,72 +111,70 @@ configure_hermes_endpoint() {
 }
 
 show_welcome_experience() {
-  # ── Stage 1: Custom Hermes Agent Intro Banner (3 detik) ──
+  # ── Stage 1: Hermes Agent Intro (compact, 3 detik) ──
   clear
   echo -e "${CYAN}"
   cat << 'EOF'
 
-    ┌─────────────────────────────────────────┐
-    │                                         │
-    │   ██╗  ██╗███████╗██████╗ ███╗   ███╗  │
-    │   ██║  ██║██╔════╝██╔══██╗████╗ ████║  │
-    │   ███████║█████╗  ██████╔╝██╔████╔██║  │
-    │   ██╔══██║██╔══╝  ██╔══██╗██║╚██╔╝██║  │
-    │   ██║  ██║███████╗██║  ██║██║ ╚═╝ ██║  │
-    │   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  │
-    │             A G E N T  C L I            │
-    │       Autonomous Pair Programmer        │
-    └─────────────────────────────────────────┘
+  ╔═══════════════════════════════════╗
+  ║  ██╗  ██╗███████╗██████╗ ███╗   ║
+  ║  ██║  ██║██╔════╝██╔══██╗████╗  ║
+  ║  ███████║█████╗  ██████╔╝██╔██╗ ║
+  ║  ██╔══██║██╔══╝  ██╔══██╗██║╚██╗║
+  ║  ██║  ██║███████╗██║  ██║██║ ╚██║
+  ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚╝║
+  ║      A G E N T   C L I           ║
+  ╚═══════════════════════════════════╝
 
 EOF
   echo -e "${RESET}"
-  echo -e "${GRAY}           Nous Research · Agentic Framework${RESET}"
-  echo -e "${CYAN}─────────────────────────────────────────────${RESET}"
-  echo -e "${GRAY}   [ Memuat runtime ekosistem... 3s ]${RESET}"
+  echo -e "${GRAY}    Nous Research · Autonomous Framework${RESET}"
+  echo -e "${CYAN}──────────────────────────────────────────${RESET}"
+  echo -e "${GRAY}  [ Memuat runtime...       3s ]${RESET}"
   sleep 1
-  echo -e "${GRAY}   [ Memeriksa gateway & sandbox... 2s ]${RESET}"
+  echo -e "${GRAY}  [ Memeriksa gateway...    2s ]${RESET}"
   sleep 1
-  echo -e "${GRAY}   [ Menghubungkan ke ruang kerja... 1s ]${RESET}"
+  echo -e "${GRAY}  [ Menghubungkan sandbox.. 1s ]${RESET}"
   sleep 1
 
-  # ── Stage 2: GaskenLE Mascot + Bold Block Title ──
+  # ── Stage 2: GaskenLE Mascot + compact title ──
   clear
   echo -e "${GOLD}"
   cat << 'EOF'
-                     -:*=:-:-:                    
-                    .**%%%%%=#=.               :-*
-            .=**+=+*##@@@%#%%*##*+--        -*++%:
-          :+*#@@@@@@##*+==--::.:--:-+=  -+*=:.:%- 
-           +=%@@@%#+=:...:=**###%%%%%#*=:..:=*#  
-           *=%@@**-....=%#+-::--=*#*:...:+%%*+#   
-       :-:=+%@@#+....-%*=::::=++=-.-===+=-..=*-   
-       %-#%@@@%*....-%=-::=+=------::--==+#%.     
-       %=@@@@@%:....#*-:-*--+=.::-==-:::-==.      
-       ==**#@%%:....*#=--%-#:+*+++++*##=:         
-          =+@@*+....:%#=***:#**++*%**=            
-          .**@%*=....-%%#*+*==-=+*=-=++           
-         -#+@@@@**=:...:=*#%%%#####*##:           
-          .=*##**###*=-:.....::::-=+-             
-            .+=--==*+@%%%%*++**+=:                
-                   -*+****+**=:                   
-                    =++++++-.                     
+           -:*=:-:-:               
+          .**%%%%%=#=.          :-*
+    .=**+=+*##@@@%#%%*#+-    -*++%:
+   :+*#@@@@##*+==--:.:-+=  -+*=.:%
+    +=%@@@%#+=...:=*###%%*=:..:=*#
+    *=%@@**-....=%#+-::=*#:.:+%%*+
+    =+%@@#+....-%*=::=++=-.-===+=-
+    %-#@@@%*...-%=-:=+=---:--==+#%
+    %=@@@@%:...#*-:-*-+=.:==-::==.
+    ==*##@%%:..*#=--#:+**+++*##=: 
+       =+@@*+..:%#=***:***+*%**=  
+       .**@%*=..-%%#*+*=-=+*=-=+  
+      -#+@@@@*=:..=*#%%####*##:   
+       .=*##**##*=:....::::-=+-   
+         .+=--=*+@%%%*++**+=:     
+                -*+***+**=:       
+                 =++++++-.        
 EOF
   echo -e "${RESET}"
   echo -e "${GOLD}"
-  # Bold block-style ASCII untuk "GaskenLE" agar tegap & mudah dibaca
+  # Compact block-style untuk GaskenLE
   cat << 'EOF'
 
-  ██████╗  █████╗ ███████╗██╗  ██╗███████╗███╗   ██╗██╗     ███████╗
- ██╔════╝ ██╔══██╗██╔════╝██║ ██╔╝██╔════╝████╗  ██║██║     ██╔════╝
- ██║  ███╗███████║███████╗█████╔╝ █████╗  ██╔██╗ ██║██║     █████╗  
- ██║   ██║██╔══██║╚════██║██╔═██╗ ██╔══╝  ██║╚██╗██║██║     ██╔══╝  
- ╚██████╔╝██║  ██║███████║██║  ██╗███████╗██║ ╚████║███████╗███████╗
-  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝
+   ██████╗ ██╗     ███████╗
+  ██╔════╝ ██║     ██╔════╝
+  ██║  ███╗██║     █████╗  
+  ██║   ██║██║     ██╔══╝  
+  ╚██████╔╝███████╗███████╗
+   ╚═════╝ ╚══════╝╚══════╝
 
 EOF
   echo -e "${RESET}"
-  echo -e "${BONE}               Workspace By hikaruu${RESET}"
-  echo -e "${GOLD}═══════════════════════════════════════════════${RESET}"
+  echo -e "${BONE}     GaskenLE Workspace By hikaruu${RESET}"
+  echo -e "${GOLD}══════════════════════════════════════${RESET}"
 }
 
 # Flag untuk mencegah double-cleanup
@@ -522,6 +520,23 @@ start_shell() {
   cd "$CURRENT_PROJECT_DIR" || true
   bash --rcfile "$WORKSPACE_DIR/config/workspace-bashrc" -i
 }
+
+# ── Auto-start 9router di background sejak awal (sebelum pilihan apapun) ──
+if ! is_9router_running; then
+  echo -e "${YELLOW}[9router]${RESET} Menyalakan gateway di background..."
+  mkdir -p "$WORKSPACE_DIR/logs"
+  if command -v 9router &>/dev/null; then
+    (
+      cd "$NINEROUTER_DIR" 2>/dev/null || cd "$WORKSPACE_DIR"
+      nohup 9router -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n --skip-update </dev/null >"$WORKSPACE_DIR/logs/9router.log" 2>&1 &
+    )
+    _NINEROUTER_STARTED_BY_US=1
+    # Tunggu sebentar agar port siap
+    for _ in {1..6}; do sleep 0.4; is_9router_running && break; done
+    is_9router_running && echo -e "${GREEN}✓ 9router aktif di :${NINEROUTER_PORT}${RESET}" || \
+      echo -e "${GRAY}  (9router masih booting, lihat logs/9router.log)${RESET}"
+  fi
+fi
 
 # Evaluasi Mode Eksekusi Awal
 case "$DEFAULT_AGENT" in
