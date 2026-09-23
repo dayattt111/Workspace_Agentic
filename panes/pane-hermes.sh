@@ -110,62 +110,66 @@ configure_hermes_endpoint() {
   fi
 }
 
-print_banner() {
-  # Tahap 1: Intro Cepat CLI "Hermes Agent"
+show_welcome_experience() {
+  # 1. Official ASCII Logo Hermes Agent (Tampil selama 3 detik)
   clear
-  echo -e "\n${CYAN}╭───────────────────────────────────────────────╮${RESET}"
-  echo -e "${CYAN}│        ⚡  NOUS HERMES AGENT CLI  ⚡          │${RESET}"
-  echo -e "${CYAN}│     Autonomous Pair Programmer & Gateway      │${RESET}"
-  echo -e "${CYAN}╰───────────────────────────────────────────────╯${RESET}"
-  sleep 0.25
+  echo -e "${CYAN}"
+  cat << 'EOF'
+                ☤  N O U S  ☤
+     _  _ ___ ___ __  __ ___ ___ 
+    | || | __| _ \  \/  | __/ __|
+    | __ | _||   / |\/| | _|\__ \
+    |_||_|___|_|_\_|  |_|___|___/
+         A G E N T   C L I
+EOF
+  echo -e "${RESET}"
+  echo -e "${BONE}       Autonomous Pair Programmer${RESET}"
+  echo -e "${GRAY}      Nous Research Framework v0.21.4${RESET}"
+  echo -e "${GOLD}===============================================${RESET}"
+  echo -e "${GRAY}   [ Memuat runtime ekosistem... 3s ]${RESET}"
+  sleep 1
+  echo -e "${GRAY}   [ Memeriksa gateway & sandbox... 2s ]${RESET}"
+  sleep 1
+  echo -e "${GRAY}   [ Menghubungkan ke ruang kerja... 1s ]${RESET}"
+  sleep 1
 
-  # Tahap 2: Animasi Slide Top-to-Bottom Logo Maskot Emas & Workspace
+  # 2. GaskenLE Mascot Logo (Digeser ke kanan agar simetris & tidak mentok ke kiri)
   clear
   echo -e "${GOLD}"
-  local logo_lines=(
-    "              -:*=:-:-:                    "
-    "             .**%%%%%=#=.               :-*"
-    "     .=**+=+*##@@@%#%%*##*+--        -*++%:"
-    "   :+*#@@@@@@##*+==--::.:--:-+=  -+*=:.:%- "
-    "    +=%@@@%#+=:...:=**###%%%%%#*=:..:=*#  "
-    "    *=%@@**-....=%#+-::--=*#*:...:+%%*+#   "
-    ":-:=+%@@#+....-%*=::::=++=-.-===+=-..=*-   "
-    "%-#%@@@%*....-%=-::=+=------::--==+#%.     "
-    "%=@@@@@%:....#*-:-*--+=.::-==-:::-==.      "
-    "==**#@%%:....*#=--%-#:+*+++++*##=:         "
-    "   =+@@*+....:%#=***:#**++*%**=            "
-    "   .**@%*=....-%%#*+*==-=+*=-=++           "
-    "  -#+@@@@**=:...:=*#%%%#####*##:           "
-    "   .=*##**###*=-:.....::::-=+-             "
-    "     .+=--==*+@%%%%*++**+=:                "
-    "            -*+****+**=:                   "
-    "             =++++++-.                     "
-  )
-
-  for line in "${logo_lines[@]}"; do
-    echo "$line"
-    sleep 0.012
-  done
-
+  cat << 'EOF'
+                     -:*=:-:-:                    
+                    .**%%%%%=#=.               :-*
+            .=**+=+*##@@@%#%%*##*+--        -*++%:
+          :+*#@@@@@@##*+==--::.:--:-+=  -+*=:.:%- 
+           +=%@@@%#+=:...:=**###%%%%%#*=:..:=*#  
+           *=%@@**-....=%#+-::--=*#*:...:+%%*+#   
+       :-:=+%@@#+....-%*=::::=++=-.-===+=-..=*-   
+       %-#%@@@%*....-%=-::=+=------::--==+#%.     
+       %=@@@@@%:....#*-:-*--+=.::-==-:::-==.      
+       ==**#@%%:....*#=--%-#:+*+++++*##=:         
+          =+@@*+....:%#=***:#**++*%**=            
+          .**@%*=....-%%#*+*==-=+*=-=++           
+         -#+@@@@**=:...:=*#%%%#####*##:           
+          .=*##**###*=-:.....::::-=+-             
+            .+=--==*+@%%%%*++**+=:                
+                   -*+****+**=:                   
+                    =++++++-.                     
+EOF
   echo -e "${RESET}"
-  local title_lines=(
-    "   ___           _              _     ___ "
-    "  / __|__ _  ___| |_____ _ _   | |   | __|"
-    " | (_ / _\` |(_-< / / -_) ' \\  | |__ | _| "
-    "  \\___\\__,_|/__/_\\_\\___|_||_|  |____||___|"
-  )
-
-  for line in "${title_lines[@]}"; do
-    echo -e "${GOLD}${line}${RESET}"
-    sleep 0.012
-  done
-
-  echo -e "${BONE}         Workspace By hikaruu${RESET}"
+  echo -e "${GOLD}"
+  cat << 'EOF'
+         ___           _              _     ___ 
+        / __|__ _  ___| |_____ _ _   | |   | __|
+       | (_ / _` |(_-< / / -_) ' \  | |__ | _| 
+        \___\__,_|/__/_\_\___|_||_|  |____||___|
+EOF
+  echo -e "${RESET}"
+  echo -e "${BONE}               Workspace By hikaruu${RESET}"
   echo -e "${GOLD}===============================================${RESET}"
 }
 
 start_unified() {
-  print_banner
+  show_welcome_experience
 
   # 1. Pastikan 9router Gateway menyala
   ensure_9router_daemon
@@ -335,7 +339,7 @@ case "$DEFAULT_AGENT" in
     start_shell
     ;;
   *)
-    print_banner
+    show_welcome_experience
     echo -e "${GRAY}Ruang Kerja Aktif :${RESET} ${GOLD}$CURRENT_PROJECT_DIR${RESET}\n"
     echo -e "${BONE}Pilih Mode AI Agent untuk Panel ini:${RESET}"
     echo -e "  ${GOLD}1)${RESET} ${BONE}Unified Mode${RESET} ${GREEN}(Langsung Siap Prompt Hermes Agent!)${RESET} ${GRAY}[Default]${RESET}"
