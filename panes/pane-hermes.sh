@@ -110,71 +110,66 @@ configure_hermes_endpoint() {
   fi
 }
 
+# ── Helper: cetak teks di tengah terminal sesuai lebar aktual ──
+_cp() {
+  local text="$1" color="${2:-}"
+  local cols; cols=$(tput cols 2>/dev/null || echo 40)
+  local len=${#text}
+  local pad=$(( (cols - len) / 2 ))
+  [ "$pad" -lt 0 ] && pad=0
+  printf "%${pad}s" ""
+  echo -e "${color}${text}${RESET}"
+}
+
 show_welcome_experience() {
-  # ── Stage 1: Hermes Agent Intro (compact, 3 detik) ──
+  # ── Stage 1: Hermes Agent Intro (thin ASCII, centered) ──
   clear
-  echo -e "${CYAN}"
-  cat << 'EOF'
-
-  ╔═══════════════════════════════════╗
-  ║  ██╗  ██╗███████╗██████╗ ███╗   ║
-  ║  ██║  ██║██╔════╝██╔══██╗████╗  ║
-  ║  ███████║█████╗  ██████╔╝██╔██╗ ║
-  ║  ██╔══██║██╔══╝  ██╔══██╗██║╚██╗║
-  ║  ██║  ██║███████╗██║  ██║██║ ╚██║
-  ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚╝║
-  ║      A G E N T   C L I           ║
-  ╚═══════════════════════════════════╝
-
-EOF
-  echo -e "${RESET}"
-  echo -e "${GRAY}    Nous Research · Autonomous Framework${RESET}"
-  echo -e "${CYAN}──────────────────────────────────────────${RESET}"
-  echo -e "${GRAY}  [ Memuat runtime...       3s ]${RESET}"
+  echo ""
+  _cp " _   _  ___  ____  __  __  ___  ___ " "$CYAN"
+  _cp "| | | || __||  _ \|  \/  || __|/ __|" "$CYAN"
+  _cp "| |_| || _|  | |_) | |\/| || _| \__ \\" "$CYAN"
+  _cp " \___/ |___| |____/|_|  |_||___||___/" "$CYAN"
+  echo ""
+  _cp "~ A G E N T   C L I ~" "$BONE"
+  _cp "Autonomous Pair Programmer" "$GRAY"
+  echo ""
+  _cp "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500" "$CYAN"
+  _cp "Nous Research \u00b7 Agentic Framework" "$GRAY"
+  echo ""
+  _cp "[ Memuat runtime...    3s ]" "$GRAY"
   sleep 1
-  echo -e "${GRAY}  [ Memeriksa gateway...    2s ]${RESET}"
+  _cp "[ Memeriksa gateway... 2s ]" "$GRAY"
   sleep 1
-  echo -e "${GRAY}  [ Menghubungkan sandbox.. 1s ]${RESET}"
+  _cp "[ Konek ke sandbox...  1s ]" "$GRAY"
   sleep 1
 
-  # ── Stage 2: GaskenLE Mascot + compact title ──
+  # ── Stage 2: GaskenLE mascot + title (compact, centered) ──
   clear
-  echo -e "${GOLD}"
-  cat << 'EOF'
-           -:*=:-:-:               
-          .**%%%%%=#=.          :-*
-    .=**+=+*##@@@%#%%*#+-    -*++%:
-   :+*#@@@@##*+==--:.:-+=  -+*=.:%
-    +=%@@@%#+=...:=*###%%*=:..:=*#
-    *=%@@**-....=%#+-::=*#:.:+%%*+
-    =+%@@#+....-%*=::=++=-.-===+=-
-    %-#@@@%*...-%=-:=+=---:--==+#%
-    %=@@@@%:...#*-:-*-+=.:==-::==.
-    ==*##@%%:..*#=--#:+**+++*##=: 
-       =+@@*+..:%#=***:***+*%**=  
-       .**@%*=..-%%#*+*=-=+*=-=+  
-      -#+@@@@*=:..=*#%%####*##:   
-       .=*##**##*=:....::::-=+-   
-         .+=--=*+@%%%*++**+=:     
-                -*+***+**=:       
-                 =++++++-.        
-EOF
-  echo -e "${RESET}"
-  echo -e "${GOLD}"
-  # Compact block-style untuk GaskenLE
-  cat << 'EOF'
-
-   ██████╗ ██╗     ███████╗
-  ██╔════╝ ██║     ██╔════╝
-  ██║  ███╗██║     █████╗  
-  ██║   ██║██║     ██╔══╝  
-  ╚██████╔╝███████╗███████╗
-   ╚═════╝ ╚══════╝╚══════╝
-
-EOF
-  echo -e "${RESET}"
-  echo -e "${BONE}     GaskenLE Workspace By hikaruu${RESET}"
-  echo -e "${GOLD}══════════════════════════════════════${RESET}"
+  echo ""
+  _cp "       -:*=:-         " "$GOLD"
+  _cp "      .**%%%#=.     :-*" "$GOLD"
+  _cp "  .=*+*#@@@%%*-  -*++%" "$GOLD"
+  _cp "  +%@@@#+=.:+#*=..:=*#" "$GOLD"
+  _cp "  *%@@*-..=%#=.:+%%*+#" "$GOLD"
+  _cp "  +%@@*.-.-%*=.-===+=." "$GOLD"
+  _cp "  -%@@@*.-%=-:--==+#%." "$GOLD"
+  _cp "  =%@@@%.#*-:==-::==. " "$GOLD"
+  _cp "  =*#@%.*#=--*##*##=: " "$GOLD"
+  _cp "   +@@*+.:#**+*%**=   " "$GOLD"
+  _cp "   *@%*=.-%%#*+=++-   " "$GOLD"
+  _cp "  -#@@*:.=*%%####*#   " "$GOLD"
+  _cp "   =*##*#*=.:::=+-    " "$GOLD"
+  _cp "    +=*+%%%*+*+=:     " "$GOLD"
+  _cp "      -*+**+**=:      " "$GOLD"
+  echo ""
+  _cp "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" "$GOLD"
+  _cp " ___         _          _     ___ " "$GOLD"
+  _cp "/ __|__ _ __| |_____ _ | |   | __|" "$GOLD"
+  _cp "\| (_ / _. |_-< / / -_) | |__| _| " "$GOLD"
+  _cp " \___|\_,_/__/_\_\___|_||____|___|" "$GOLD"
+  echo ""
+  _cp "Workspace By hikaruu" "$BONE"
+  _cp "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" "$GOLD"
 }
 
 # Flag untuk mencegah double-cleanup
@@ -521,20 +516,33 @@ start_shell() {
   bash --rcfile "$WORKSPACE_DIR/config/workspace-bashrc" -i
 }
 
-# ── Auto-start 9router di background sejak awal (sebelum pilihan apapun) ──
+# ── Auto-start 9router di background sejak awal ──
+# Re-export PATH agar bun/npm ditemukan meski dijalankan dari tmux
+export PATH="$HOME/.bun/bin:$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"
+
 if ! is_9router_running; then
-  echo -e "${YELLOW}[9router]${RESET} Menyalakan gateway di background..."
-  mkdir -p "$WORKSPACE_DIR/logs"
-  if command -v 9router &>/dev/null; then
+  _NR_BIN=$(command -v 9router 2>/dev/null || true)
+  if [ -n "$_NR_BIN" ]; then
+    mkdir -p "$WORKSPACE_DIR/logs"
     (
+      # WAJIB cd ke folder 9router agar config dibaca dengan benar
       cd "$NINEROUTER_DIR" 2>/dev/null || cd "$WORKSPACE_DIR"
-      nohup 9router -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n --skip-update </dev/null >"$WORKSPACE_DIR/logs/9router.log" 2>&1 &
+      nohup "$_NR_BIN" -p "$NINEROUTER_PORT" -H "$NINEROUTER_HOST" -n --skip-update \
+        </dev/null >"$WORKSPACE_DIR/logs/9router.log" 2>&1 &
+      disown
     )
     _NINEROUTER_STARTED_BY_US=1
-    # Tunggu sebentar agar port siap
-    for _ in {1..6}; do sleep 0.4; is_9router_running && break; done
-    is_9router_running && echo -e "${GREEN}✓ 9router aktif di :${NINEROUTER_PORT}${RESET}" || \
-      echo -e "${GRAY}  (9router masih booting, lihat logs/9router.log)${RESET}"
+    # Tunggu hingga 3 detik sampai port terbuka
+    for _i in 1 2 3 4 5 6; do
+      sleep 0.5
+      if is_9router_running; then
+        echo -e "${GREEN}[9router] \u2713 Gateway aktif :${NINEROUTER_PORT}${RESET}"
+        break
+      fi
+    done
+    is_9router_running || echo -e "${GRAY}[9router] Booting... cek: logs/9router.log${RESET}"
+  else
+    echo -e "${YELLOW}[9router] Tidak ditemukan \u2014 pasang: bun add -g 9router${RESET}"
   fi
 fi
 
