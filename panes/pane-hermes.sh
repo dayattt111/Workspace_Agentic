@@ -110,12 +110,62 @@ configure_hermes_endpoint() {
   fi
 }
 
-start_unified() {
+print_banner() {
+  # Tahap 1: Intro Cepat CLI "Hermes Agent"
   clear
+  echo -e "\n${CYAN}╭───────────────────────────────────────────────╮${RESET}"
+  echo -e "${CYAN}│        ⚡  NOUS HERMES AGENT CLI  ⚡          │${RESET}"
+  echo -e "${CYAN}│     Autonomous Pair Programmer & Gateway      │${RESET}"
+  echo -e "${CYAN}╰───────────────────────────────────────────────╯${RESET}"
+  sleep 0.25
+
+  # Tahap 2: Animasi Slide Top-to-Bottom Logo Maskot Emas & Workspace
+  clear
+  echo -e "${GOLD}"
+  local logo_lines=(
+    "              -:*=:-:-:                    "
+    "             .**%%%%%=#=.               :-*"
+    "     .=**+=+*##@@@%#%%*##*+--        -*++%:"
+    "   :+*#@@@@@@##*+==--::.:--:-+=  -+*=:.:%- "
+    "    +=%@@@%#+=:...:=**###%%%%%#*=:..:=*#  "
+    "    *=%@@**-....=%#+-::--=*#*:...:+%%*+#   "
+    ":-:=+%@@#+....-%*=::::=++=-.-===+=-..=*-   "
+    "%-#%@@@%*....-%=-::=+=------::--==+#%.     "
+    "%=@@@@@%:....#*-:-*--+=.::-==-:::-==.      "
+    "==**#@%%:....*#=--%-#:+*+++++*##=:         "
+    "   =+@@*+....:%#=***:#**++*%**=            "
+    "   .**@%*=....-%%#*+*==-=+*=-=++           "
+    "  -#+@@@@**=:...:=*#%%%#####*##:           "
+    "   .=*##**###*=-:.....::::-=+-             "
+    "     .+=--==*+@%%%%*++**+=:                "
+    "            -*+****+**=:                   "
+    "             =++++++-.                     "
+  )
+
+  for line in "${logo_lines[@]}"; do
+    echo "$line"
+    sleep 0.012
+  done
+
+  echo -e "${RESET}"
+  local title_lines=(
+    "   ___           _              _     ___ "
+    "  / __|__ _  ___| |_____ _ _   | |   | __|"
+    " | (_ / _\` |(_-< / / -_) ' \\  | |__ | _| "
+    "  \\___\\__,_|/__/_\\_\\___|_||_|  |____||___|"
+  )
+
+  for line in "${title_lines[@]}"; do
+    echo -e "${GOLD}${line}${RESET}"
+    sleep 0.012
+  done
+
+  echo -e "${BONE}         Workspace By hikaruu${RESET}"
   echo -e "${GOLD}===============================================${RESET}"
-  echo -e "${BONE}       ⚡ GASKENLE AI AGENT ECOSYSTEM ⚡       ${RESET}"
-  echo -e "${GRAY}      9router Gateway  <───>  Hermes Docker    ${RESET}"
-  echo -e "${GOLD}===============================================${RESET}"
+}
+
+start_unified() {
+  print_banner
 
   # 1. Pastikan 9router Gateway menyala
   ensure_9router_daemon
@@ -285,12 +335,9 @@ case "$DEFAULT_AGENT" in
     start_shell
     ;;
   *)
-    clear
-    echo -e "${GOLD}===============================================${RESET}"
-    echo -e "${BONE}       ⚡ GASKENLE AI AGENT ECOSYSTEM ⚡       ${RESET}"
-    echo -e "${GRAY}      9router Gateway  <───>  Hermes Docker    ${RESET}"
-    echo -e "${GOLD}===============================================${RESET}"
-    echo -e "${BONE}Pilih Mode untuk Panel Kiri ini:${RESET}"
+    print_banner
+    echo -e "${GRAY}Ruang Kerja Aktif :${RESET} ${GOLD}$CURRENT_PROJECT_DIR${RESET}\n"
+    echo -e "${BONE}Pilih Mode AI Agent untuk Panel ini:${RESET}"
     echo -e "  ${GOLD}1)${RESET} ${BONE}Unified Mode${RESET} ${GREEN}(Langsung Siap Prompt Hermes Agent!)${RESET} ${GRAY}[Default]${RESET}"
     echo -e "  ${GOLD}2)${RESET} ${CYAN}9router Gateway Console${RESET} ${GRAY}(Live Logs & Server Status)${RESET}"
     echo -e "  ${GOLD}3)${RESET} ${YELLOW}Terminal Shell Container${RESET} ${GRAY}(Bash di /workspace proyek)${RESET}"
